@@ -25,16 +25,32 @@ while (have_posts()) {
                 <p><a class="metabox__blog-home-link" href="<?= get_permalink($theParent)?>"><i class="fa fa-home" aria-hidden="true"></i> Back to <?= get_the_title($theParent) ?></a> <span class="metabox__main"><?php the_title();?></span></p>
             </div>
         <?php endif ?>
+            
+        <?php 
+            // se a página atual tiver filhos, a função retorna a coleção de todas as paginas filhas 
+            $testArray= get_pages([
+                'child_of' => get_the_ID()
+            ]);
 
-        
-        <!-- <div class="page-links">
-        <h2 class="page-links__title"><a href="#">About Us</a></h2>
-        <ul class="min-list">
-            <li class="current_page_item"><a href="#">Our History</a></li>
-            <li><a href="#">Our Goals</a></li>
-        </ul>
-        </div> -->
-   
+            //verifica se tem um pai ou é um pai, se for verdadeiro, entra no if
+            if($theParent || $testArray): ?>
+            <div class="page-links">
+                <h2 class="page-links__title"><a href="<?= get_permalink($theParent) ?>"><?= get_the_title($theParent) ?></a></h2>
+                <ul class="min-list">
+                    <?php 
+                        if($theParent){
+                            $findChildrenOf = $theParent ;
+                        }else{
+                            $findChildrenOf = get_the_ID();
+                        }
+                        wp_list_pages([
+                            'title_li' => NULL,
+                            'child_of' => $findChildrenOf
+                        ]);
+                    ?>
+                </ul>
+            </div>
+        <?php endif ?>
 
         <div class="generic-content">
             <?php the_content(); ?>
