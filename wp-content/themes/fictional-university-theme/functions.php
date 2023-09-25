@@ -21,3 +21,9 @@ function university_features(){
 }
 
 add_action('after_setup_theme', 'university_features');
+
+# Remove The [...] is added by the_excerpt().
+function new_excerpt_more( $more ) {
+    return '';
+}
+add_filter('excerpt_more', 'new_excerpt_more');
