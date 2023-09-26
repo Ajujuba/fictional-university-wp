@@ -14,8 +14,8 @@
                         <nav class="nav-list">
                             <ul>
                                 <!-- <li><a href="<?= site_url('/index.php/about-us') ?>">About Us</a></li>
-                                <li><a href="#">Programs</a></li>
-                                <li><a href="#">Events</a></li>
+                                <li><a href="<?= site_url('/index.php/programs') ?>">Programs</a></li>
+                                <li><a href="<?= site_url('/index.php/events') ?>">Events</a></li>
                                 <li><a href="#">Campuses</a></li> -->
                                 <?php 
                                     wp_nav_menu([
