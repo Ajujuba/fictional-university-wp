@@ -1,6 +1,6 @@
 <?php
 
-#Load my css e js
+#Load my css e js when load my hook wp_enqueue_scripts
 function university_files(){
     wp_enqueue_script('main-university-js', get_theme_file_uri('/build/index.js'), array('jquery'), '1.0', true); // aqui digo meu js usa dependencia do jquey , depois a versão do meu js, e o ultimo diz se quero carregar antes do fechamento do body
     wp_enqueue_style('custom-google-fonts', '//fonts.googleapis.com/css?family=Roboto+Condensed:300,300i,400,400i,700,700i|Roboto:100,300,400,400i,700,700i');
@@ -12,7 +12,7 @@ function university_files(){
 
 add_action('wp_enqueue_scripts', 'university_files');
 
-#Get page title for my browser
+#Get page title for my browser  when load my hook after_setup_theme
 function university_features(){
     register_nav_menu('headerMenuLocation', 'Header Menu Location');
     register_nav_menu('footerLocation1', 'Footer Location 1');
@@ -27,3 +27,28 @@ function new_excerpt_more( $more ) {
     return '';
 }
 add_filter('excerpt_more', 'new_excerpt_more');
+
+function university_adjust_queries($query){
+    $today = date('Ymd');
+
+    if(!is_admin() AND is_post_type_archive('event') AND $query->is_main_query()){
+        $query->set('meta_key','event_date');
+        $query->set('orderby', 'event_date');
+        $query->set('orderby', 'meta_value_num');
+        $query->set('order', 'ASC');
+        $query->set('meta_query', 
+            [
+                [
+                    'key' => 'event_date',
+                    'compare' => '>=',
+                    'value' => $today,
+                    'type' => 'numeric'
+                ]
+            ]
+        );
+
+
+
+    }
+}
+add_action('pre_get_posts', 'university_adjust_queries');
