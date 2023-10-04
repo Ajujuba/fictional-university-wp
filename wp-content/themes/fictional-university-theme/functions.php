@@ -37,7 +37,7 @@ add_filter('excerpt_more', 'new_excerpt_more');
 function university_adjust_queries($query){
     $today = date('Ymd');
 
-    if(!is_admin() AND is_post_type_archive('event') AND $query->is_main_query()){
+    if(!is_admin() && is_post_type_archive('event') && $query->is_main_query()){
         $query->set('meta_key','event_date');
         $query->set('orderby', 'event_date');
         $query->set('orderby', 'meta_value_num');
@@ -54,7 +54,7 @@ function university_adjust_queries($query){
         );
     }
 
-    if(!is_admin() AND is_post_type_archive('program') AND $query->is_main_query()){
+    if(!is_admin() && is_post_type_archive('program') && $query->is_main_query()){
         $query->set('orderby', 'title');
         $query->set('order', 'ASC');
         $query->set('posts_perpage', '-1');
@@ -63,3 +63,33 @@ function university_adjust_queries($query){
 
 }
 add_action('pre_get_posts', 'university_adjust_queries');
+
+function pageBanner($args = NULL){
+
+    if(!isset($args['title'])){
+        $args['title'] = get_the_title();
+    }
+
+    if(!isset($args['subtitle'])){
+        $args['subtitle'] = get_field('page_banner_subtitle');
+    }
+
+    if(!isset($args['photo'])){
+        if(get_field('page_banner_background_image') && !is_archive() && !is_home() ){
+            $args['photo'] = get_field('page_banner_background_image')['sizes']['pageBanner'];
+        }  else {
+            $args['photo'] = get_theme_file_uri('/images/ocean.jpg');
+        }
+    }
+    ?>
+    <div class="page-banner">
+        <div class="page-banner__bg-image" style="background-image: url(<?= $args['photo'] ?>);"></div>
+        <div class="page-banner__content container container--narrow">
+            <h1 class="page-banner__title"><?= $args['title'] ?></h1>
+            <div class="page-banner__intro">
+                <p><?= $args['subtitle'] ?></p>
+            </div>
+        </div>
+    </div>
+    <?php
+}
