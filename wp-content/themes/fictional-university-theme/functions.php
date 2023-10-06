@@ -93,3 +93,10 @@ function pageBanner($args = NULL){
     </div>
     <?php
 }
+
+#COMO NAO ATIVEI A API, AO INVES DE USAR UM CAMPO PERSONALIZADO DO GOOGLE MAPS CRIEI UM CAMPO TIPO WYSIWYG E COPIEI O CODIGO DO GOOGLE MAPS PRA INCORPORAR NA MINHA PAGINA
+// function universityMapKey($api){
+//     $api['key'] = '';//'Aqui vai sua API se vc tiver uma configurada com os 3 plugins necessários pro mapa funcionar, nao fiz pq precisa associar cartao'
+//     return $api;
+// }
+// add_filter('acf/fields/google_map/api', 'universityMapKey');
