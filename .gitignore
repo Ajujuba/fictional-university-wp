@@ -1,3 +1,4 @@
 
 .DS_Store
 wp-content/uploads/**
+wp-content/themes/fictional-university-theme/node_modules
