@@ -2,7 +2,7 @@
 
 #Load my css e js when load my hook wp_enqueue_scripts
 function university_files(){
-    wp_enqueue_script('main-university-js', get_theme_file_uri('/build/index.js'), array('jquery'), '1.0', true); // aqui digo meu js usa dependencia do jquey , depois a versão do meu js, e o ultimo diz se quero carregar antes do fechamento do body
+    wp_enqueue_script('main-university-js', get_theme_file_uri('/build/index.js'), array('jquery'), '1.0', true);// here I say my js uses a jquey dependency, then the version of my js, and the last one says if I want to load before the body closes
     wp_enqueue_style('custom-google-fonts', '//fonts.googleapis.com/css?family=Roboto+Condensed:300,300i,400,400i,700,700i|Roboto:100,300,400,400i,700,700i');
     wp_enqueue_style('font-awesome', '//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css');
     wp_enqueue_style('university_main_styles', get_theme_file_uri('/build/style-index.css'));
@@ -94,9 +94,9 @@ function pageBanner($args = NULL){
     <?php
 }
 
-#COMO NAO ATIVEI A API, AO INVES DE USAR UM CAMPO PERSONALIZADO DO GOOGLE MAPS CRIEI UM CAMPO TIPO WYSIWYG E COPIEI O CODIGO DO GOOGLE MAPS PRA INCORPORAR NA MINHA PAGINA
+# AS I DID NOT ACTIVATE THE API, INSTEAD OF USING A CUSTOM FIELD FROM GOOGLE MAPS, I CREATED A WYSIWYG FIELD AND COPIED THE GOOGLE MAPS CODE TO INCORPORATE ON MY PAGE
 // function universityMapKey($api){
-//     $api['key'] = '';//'Aqui vai sua API se vc tiver uma configurada com os 3 plugins necessários pro mapa funcionar, nao fiz pq precisa associar cartao'
+//     $api['key'] = ''; // Here is your API if you have one configured with the 3 plugins necessary for the map to work, I didn't do it because it needs to associate the card
 //     return $api;
 // }
 // add_filter('acf/fields/google_map/api', 'universityMapKey');

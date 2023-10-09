@@ -29,7 +29,7 @@
                             'value' => '"'. get_the_ID() . '"', //precisa retornar entre aspas pra funcionar corretamente o retorno e ele pegar só oq corresponde exatamente a string
                         ]
                     ]
-                    #Se quisesse ordenar por ordem alfabetica:
+                    #alphabetical order
                     // 'orderby' => 'title',
                     // 'order' => 'ASC'
 
