@@ -30,7 +30,8 @@ class Search{
     openOverlay(){
         this.searchOverlay.addClass("search-overlay--active");
         $('body').addClass('body-no-scroll');
-        this.searchField.val('');
+        this.searchField.val(''); //open my input = ''
+        this.resultsDiv.html(''); //open my div = ''
         setTimeout(() => this.searchField.focus(), 301); //making the cursor focused on the field after 301miliseg which is the time my animation loads the search screen
         this.isOverlayOpen = true;
     }
@@ -73,19 +74,49 @@ class Search{
 
     //get data from WP json according to what the user searched for and returns in my screen
     getResults(){
-        $.getJSON(universityData.root_url + '/index.php/wp-json/wp/v2/posts?search=' + this.searchField.val(), posts => { 
-        this.resultsDiv.html(`
+
+        //asynchronous search
+        $.when(
+            $.getJSON(universityData.root_url + '/index.php/wp-json/wp/v2/posts?search=' + this.searchField.val()),
+            $.getJSON(universityData.root_url + '/index.php/wp-json/wp/v2/pages?search=' + this.searchField.val()),
+            $.getJSON(universityData.root_url + '/index.php/wp-json/wp/v2/event?search=' + this.searchField.val()),
+            $.getJSON(universityData.root_url + '/index.php/wp-json/wp/v2/program?search=' + this.searchField.val()),
+            $.getJSON(universityData.root_url + '/index.php/wp-json/wp/v2/campus?search=' + this.searchField.val())
+
+        ).then((posts, pages, events, programs, campuses) => {
+            var combineResults = posts[0].concat(pages[0], events[0], programs[0], campuses[0]);
+            this.resultsDiv.html(`
                 <h2 class="search-overlay__section-title">General Information</h2>
-                ${ posts.length ? '<ul class="link-list min-list">' : '<p>No general informations matches that search. </p>'}
+                ${ combineResults.length ? '<ul class="link-list min-list">' : '<p>No general informations matches that search. </p>'}
                 ${
-                    posts.map(
+                    combineResults.map(
                         //.join('') concatenate the elements of an array into a single string, in this case The elements will simply be concatenated next to each other without any additional space between them.
                         item => ` <li><a href="${item.link}">${item.title.rendered}</a></li>`
                     ).join('')
                 }
-                ${posts.length ? '</ul>' : ''}
+                ${combineResults.length ? '</ul>' : ''}
             `);
+        }, () => {
+            this.resultsDiv.html('<p>Unexpected error; please try again.</p>');
         });
+
+        // synchronous search
+        // $.getJSON(universityData.root_url + '/index.php/wp-json/wp/v2/posts?search=' + this.searchField.val(), posts => { 
+        //     $.getJSON(universityData.root_url + '/index.php/wp-json/wp/v2/pages?search=' + this.searchField.val(), pages => {
+        //         var combineResults = posts.concat(pages);
+        //         this.resultsDiv.html(`
+        //             <h2 class="search-overlay__section-title">General Information</h2>
+        //             ${ combineResults.length ? '<ul class="link-list min-list">' : '<p>No general informations matches that search. </p>'}
+        //             ${
+        //                 combineResults.map(
+        //                     //.join('') concatenate the elements of an array into a single string, in this case The elements will simply be concatenated next to each other without any additional space between them.
+        //                     item => ` <li><a href="${item.link}">${item.title.rendered}</a></li>`
+        //                 ).join('')
+        //             }
+        //             ${combineResults.length ? '</ul>' : ''}
+        //         `);
+        //     });
+        // });
         this.isSpinnerVisible = false;
     }
 
