@@ -3,6 +3,7 @@ import $ from 'jquery';
 class Search{
     // 1. describe and create/initiate our object
     constructor(){
+        this.addSearchHTML();
         this.openButton = $('.js-search-trigger');
         this.closeButton = $('.search-overlay__close');
         this.searchOverlay = $('.search-overlay');
@@ -24,16 +25,24 @@ class Search{
     }
 
     // 3. methods
+
+    //open my search screen
     openOverlay(){
         this.searchOverlay.addClass("search-overlay--active");
         $('body').addClass('body-no-scroll');
+        this.searchField.val('');
+        setTimeout(() => this.searchField.focus(), 301); //making the cursor focused on the field after 301miliseg which is the time my animation loads the search screen
         this.isOverlayOpen = true;
     }
+
+    //close my search screen
     closeOverlay(){
         this.searchOverlay.removeClass("search-overlay--active");
         $('body').removeClass('body-no-scroll');
         this.isOverlayOpen = false;
     }
+
+    //open and close my search screen with ESC and S
     keyPressDispatcher(event){
         if(event.keyCode == 83 && !this.isOverlayOpen && !$('input, textarea').is(':focus')){
             this.openOverlay();
@@ -42,6 +51,8 @@ class Search{
             this.closeOverlay();
         }
     }
+
+    //this code make my icon loader appear and hidden. And get what my user write
     typingLogic(){
         if(this.searchField.val() != this.previousValue){
             clearTimeout(this.typingTimer);
@@ -50,7 +61,7 @@ class Search{
                     this.resultsDiv.html('<div class="spinner-loader"></div>');
                     this.isSpinnerVisible = true;
                 }
-                this.typingTimer = setTimeout(this.getResults.bind(this), 2000);
+                this.typingTimer = setTimeout(this.getResults.bind(this), 1000);
             }else{
                 this.resultsDiv.html(' ');
                 this.isSpinnerVisible = false;
@@ -60,9 +71,41 @@ class Search{
         this.previousValue = this.searchField.val();
     }
 
+    //get data from WP json according to what the user searched for and returns in my screen
     getResults(){
-        this.resultsDiv.html('imagine real result');
+        $.getJSON(universityData.root_url + '/index.php/wp-json/wp/v2/posts?search=' + this.searchField.val(), posts => { 
+        this.resultsDiv.html(`
+                <h2 class="search-overlay__section-title">General Information</h2>
+                ${ posts.length ? '<ul class="link-list min-list">' : '<p>No general informations matches that search. </p>'}
+                ${
+                    posts.map(
+                        //.join('') concatenate the elements of an array into a single string, in this case The elements will simply be concatenated next to each other without any additional space between them.
+                        item => ` <li><a href="${item.link}">${item.title.rendered}</a></li>`
+                    ).join('')
+                }
+                ${posts.length ? '</ul>' : ''}
+            `);
+        });
         this.isSpinnerVisible = false;
+    }
+
+    addSearchHTML(){
+        $('body').append(`
+            <div class="search-overlay">
+                <div class="search-overlay__top">
+                    <div class="container">
+                        <i class="fa fa-search search-overlay__icon" aria-hidden="true"></i>
+                        <input type="text" class="search-term" placeholder="What are you looking for?" id="js-search-term">
+                        <i class="fa fa-window-close search-overlay__close" aria-hidden="true"></i>
+                    </div>
+                </div>
+                <div class="container">
+                    <div id="search-overlay__results">
+
+                    </div>
+                </div>
+            </div>
+        `);
     }
 
 }
