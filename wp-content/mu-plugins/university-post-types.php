@@ -40,7 +40,7 @@ function university_post_types(){
 
     #Professor post type
     register_post_type('professor', [
-        'show_in_rest' => true, 
+        'show_in_rest' => true, //this line allows me to see this type of post in the WP REST API 
         'supports' => ['title', 'editor', 'thumbnail'],
         'public' => true,
         'labels' => [
@@ -56,7 +56,7 @@ function university_post_types(){
 
     #Campus post type
     register_post_type('campus', [
-        'show_in_rest' => true, //isso permite o editor moderno do WP pq habilita o JS no meu tipo personalizado
+        'show_in_rest' => true, //this line allows me to see this type of post in the WP REST API 
         'supports' => ['title', 'editor', 'excerpt'], //se eu não especificar 'editor', vai carregar o editor antigo. Mas se eu tirar essa linha e deixar a de cima, funciona o editor novo
         'rewrite' => ['slug'=>'campuses'],
         'has_archive' => true,

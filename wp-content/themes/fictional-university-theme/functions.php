@@ -1,5 +1,8 @@
 <?php
 
+#Here I'm including my Custom REST API for searching my custom posts type
+require get_theme_file_path('/inc/search-route.php');
+
 #This function customized my REST API return adding a property 'authorName'
 function university_custom_rest(){
     register_rest_field('post', 'authorName', [
