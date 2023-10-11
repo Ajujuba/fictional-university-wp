@@ -91,7 +91,7 @@ class Search{
                 ${
                     combineResults.map(
                         //.join('') concatenate the elements of an array into a single string, in this case The elements will simply be concatenated next to each other without any additional space between them.
-                        item => ` <li><a href="${item.link}">${item.title.rendered}</a></li>`
+                        item => ` <li><a href="${item.link}">${item.title.rendered}</a> ${item.type == 'post' ? `by ${item.authorName}` : '' }</li>`
                     ).join('')
                 }
                 ${combineResults.length ? '</ul>' : ''}

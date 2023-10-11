@@ -1,5 +1,13 @@
 <?php
 
+#This function customized my REST API return adding a property 'authorName'
+function university_custom_rest(){
+    register_rest_field('post', 'authorName', [
+        'get_callback' => function(){ return get_the_author();}
+    ]);
+}
+add_action('rest_api_init', 'university_custom_rest');
+
 #Load my css e js when load my hook wp_enqueue_scripts
 function university_files(){
     wp_enqueue_script('main-university-js', get_theme_file_uri('/build/index.js'), array('jquery'), '1.0', true);// here I say my js uses a jquey dependency, then the version of my js, and the last one says if I want to load before the body closes
