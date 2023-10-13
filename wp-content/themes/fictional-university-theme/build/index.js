@@ -174,7 +174,7 @@ class Search {
 
   //get data from WP json according to what the user searched for and returns in my screen
   getResults() {
-    //My custom search REST API
+    //#My custom search REST API
     jquery__WEBPACK_IMPORTED_MODULE_0___default().getJSON(universityData.root_url + '/index.php/wp-json/university/v1/search?term=' + this.searchField.val(), results => {
       this.resultsDiv.html(`
                 <div class="row">

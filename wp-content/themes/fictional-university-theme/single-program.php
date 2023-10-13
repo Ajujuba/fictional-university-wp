@@ -10,7 +10,7 @@
                 <p><a class="metabox__blog-home-link" href="<?= get_post_type_archive_link('program')?>"><i class="fa fa-home" aria-hidden="true"></i> All Programs </a> <span class="metabox__main"><?php the_title() ?></span></p>
             </div>
             <div class="generic-content">
-                <?php the_content(); ?>
+                <?php the_field('main_body_content'); //I'm calling the custom field because of the search, if I leave my 'programs' content in the default content, WP searches for this text, but to avoid bringing incorrect data I put my 'program' text in an ACF ?>
             </div>
 
             <?php 
