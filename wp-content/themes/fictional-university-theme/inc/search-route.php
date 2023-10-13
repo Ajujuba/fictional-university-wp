@@ -71,11 +71,29 @@ function universitySearchResults($data) {
         //     ]);
         // }
 
+        //get date for my event
+        $eventDate = new DateTime(get_field('event_date'));
+        $description = null;
+        //get if exists excerpt or not
+        if(has_excerpt()){
+            $description = get_the_excerpt();
+        }else{
+            $description = wp_trim_words(get_the_content(), 18);
+        }
+
         # I could use the ifs above, but to clean the code I can use:
         $post_type_group = $labels[get_post_type()]; // This line determines the category in $results that the current post belongs to, based on the post type. It uses the $labels array to make this match.
         array_push($results[$post_type_group], array(
             'title' => get_the_title(),
-            'permalink' => get_the_permalink()
+            'permalink' => get_the_permalink(),
+            'postType' => get_post_type(),
+            'authorName' => get_the_author(),
+            'image' => get_the_post_thumbnail_url(0,'professorLandscape'),
+            'month' => $eventDate->format('M'),
+            'day' => $eventDate->format('d'),
+            'description' => $description
+            
+
         )); //The current post details, such as the title and permalink, are added to the corresponding associative array in $results. The key is determined based on the post type and is stored in $post_type_group.
         
     }
