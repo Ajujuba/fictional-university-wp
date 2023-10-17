@@ -34,6 +34,7 @@ class Search{
         this.resultsDiv.html(''); //open my div = ''
         setTimeout(() => this.searchField.focus(), 301); //making the cursor focused on the field after 301miliseg which is the time my animation loads the search screen
         this.isOverlayOpen = true;
+        return false;
     }
 
     //close my search screen
