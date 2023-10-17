@@ -4,8 +4,10 @@
 function university_post_types(){
     #Event post type
     register_post_type('event', [
-        'show_in_rest' => true, //isso permite o editor moderno do WP pq habilita o JS no meu tipo personalizado
-        'supports' => ['title', 'editor', 'excerpt'], //se eu não especificar 'editor', vai carregar o editor antigo. Mas se eu tirar essa linha e deixar a de cima, funciona o editor novo
+        'capability_type' => 'event', //This line allows us to create unique permissions for the type of event, without it the permissions remain generic and are the same as those in the post
+        'map_meta_cap' => true, //complements of my permission for event
+        'show_in_rest' => true, //This enables the WP modern editor because I enabled JS in my custom type
+        'supports' => ['title', 'editor', 'excerpt'], //if I don't specify 'editor', it will load the old editor. But if I remove this line and leave the top one, the new editor works
         'rewrite' => ['slug'=>'events'],
         'has_archive' => true,
         'public' => true,
@@ -56,8 +58,10 @@ function university_post_types(){
 
     #Campus post type
     register_post_type('campus', [
+        'capability_type' => 'campus', //This line allows us to create unique permissions for the type of event, without it the permissions remain generic and are the same as those in the post
+        'map_meta_cap' => true,
         'show_in_rest' => true, //this line allows me to see this type of post in the WP REST API 
-        'supports' => ['title', 'editor', 'excerpt'], //se eu não especificar 'editor', vai carregar o editor antigo. Mas se eu tirar essa linha e deixar a de cima, funciona o editor novo
+        'supports' => ['title', 'editor', 'excerpt'], //if I don't specify 'editor', it will load the old editor. But if I remove this line and leave the top one, the new editor works
         'rewrite' => ['slug'=>'campuses'],
         'has_archive' => true,
         'public' => true,

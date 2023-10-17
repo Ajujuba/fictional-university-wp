@@ -495,6 +495,10 @@ body.login {
   text-indent: 0;
 }
 
+#login {
+  width: 470px;
+}
+
 .btn {
   display: inline-block;
   cursor: pointer;
