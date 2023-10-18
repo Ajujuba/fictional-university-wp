@@ -21,7 +21,8 @@ function university_files(){
     
     //this function will create a js variavle with de value of my url site domain
     wp_localize_script('main-university-js', 'universityData', [
-        'root_url' => get_site_url()
+        'root_url' => get_site_url(),
+        'nonce' => wp_create_nonce('wp_rest') //this line will create a nonce (like 'a secret key') for autorize my users in requests like delete or update
     ]);
 }
 

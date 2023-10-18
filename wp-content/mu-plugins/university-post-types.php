@@ -75,6 +75,22 @@ function university_post_types(){
         ],
         'menu_icon' => 'dashicons-location-alt'
     ]);
+
+    #Notes post type
+    register_post_type('note', [
+        'show_in_rest' => true, //this line allows me to see this type of post in the WP REST API 
+        'supports' => ['title', 'editor'],
+        'public' => false, // we don't want that our notes appears in public searchs or to users disconected 
+        'show_ui' => true, //this line will show this in my admin dashboard
+        'labels' => [
+            'name' => 'Notes',
+            'add_new_item' => 'Add New Note',
+            'edit_item' => 'Edit Note',
+            'all_items' => 'All Notes',
+            'singular_name' => 'Note'
+        ],
+        'menu_icon' => 'dashicons-welcome-write-blog'
+    ]);
     
 }
 add_action('init', 'university_post_types');
