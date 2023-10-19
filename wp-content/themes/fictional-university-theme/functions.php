@@ -3,10 +3,14 @@
 #Here I'm including my Custom REST API for searching my custom posts type
 require get_theme_file_path('/inc/search-route.php');
 
-#This function customized my REST API return adding a property 'authorName'
+#This function customized my REST API return adding a property 'authorName' and  'userNoteCount'
 function university_custom_rest(){
     register_rest_field('post', 'authorName', [
         'get_callback' => function(){ return get_the_author();}
+    ]);
+    //check and returns in response how many notes my user already has
+    register_rest_field('note', 'userNoteCount', [
+        'get_callback' => function(){ return count_user_posts(get_current_user_id(), 'note');}
     ]);
 }
 add_action('rest_api_init', 'university_custom_rest');
@@ -158,8 +162,12 @@ function ourHeaderTitle() {
 add_filter('login_headertitle', 'ourHeaderTitle');
 
 # Force note posts to be private
-function makeNotePrivate($data){
+function makeNotePrivate($data, $postarr){
     if($data['post_type'] == 'note'){
+        //checks if my user has reached the posting limit and if this request is to create, in other words, if this post don't have id yet
+        if(count_user_posts(get_current_user_id(), 'note') > 4 && !$postarr['ID']){
+            die("You have reached your note limit.");
+        }
         $data['post_content'] = sanitize_textarea_field($data['post_content']); //sanitize my textarea to my user can't use any html
         $data['post_title'] = sanitize_text_field($data['post_title']); //sanitize my title to my user can't use any html
 
@@ -169,4 +177,7 @@ function makeNotePrivate($data){
     }
     return $data;
 }
-add_filter('wp_insert_post_data', 'makeNotePrivate');
+//This hook run when you want insert and update too
+//this parameter '2' indicates that my 'makeNotePrivate' function will have 2 parameters, instead of 1 by default. 
+//And the '10' is the priority when returning the function, this is a problem if you are going to call many functions for the same hook, in this case each call to the hook I need to define which fn I want to execute first (the smallest number executes first)
+add_filter('wp_insert_post_data', 'makeNotePrivate', 10, 2);

@@ -26,6 +26,10 @@ class MyNotes{
                 thisNote.slideUp();
                 console.log('deleted');
                 console.log(response);
+                //Check if my user don't has 5 notes yet, then I don't show my limit message 
+                if(response.userNoteCount < 5){
+                    $('.note-limit-message').removeClass('active');
+                }
             },
             error: (response) => {
                 console.log('not deleted');
@@ -116,6 +120,10 @@ class MyNotes{
                 console.log(response);
             },
             error: (response) => {
+                //check if my 'responseText' (that is a parameter in my console.log(response)) has this text, then I show my span with the message to my user
+                if(response.responseText == "You have reached your note limit."){
+                    $('.note-limit-message').addClass('active');
+                }
                 console.log('not created');
                 console.log(response);
             }
