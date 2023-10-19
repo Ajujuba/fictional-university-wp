@@ -14,9 +14,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_HeroSlider__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./modules/HeroSlider */ "./src/modules/HeroSlider.js");
 /* harmony import */ var _modules_Search__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modules/Search */ "./src/modules/Search.js");
 /* harmony import */ var _modules_MyNotes__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./modules/MyNotes */ "./src/modules/MyNotes.js");
+/* harmony import */ var _modules_Like__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./modules/Like */ "./src/modules/Like.js");
 
 
 // Our modules / classes
+
 
 
 
@@ -27,6 +29,7 @@ var mobileMenu = new _modules_MobileMenu__WEBPACK_IMPORTED_MODULE_1__["default"]
 var heroSlider = new _modules_HeroSlider__WEBPACK_IMPORTED_MODULE_2__["default"]();
 var search = new _modules_Search__WEBPACK_IMPORTED_MODULE_3__["default"]();
 var myNotes = new _modules_MyNotes__WEBPACK_IMPORTED_MODULE_4__["default"]();
+var like = new _modules_Like__WEBPACK_IMPORTED_MODULE_5__["default"]();
 
 /***/ }),
 
@@ -65,6 +68,92 @@ class HeroSlider {
   }
 }
 /* harmony default export */ __webpack_exports__["default"] = (HeroSlider);
+
+/***/ }),
+
+/***/ "./src/modules/Like.js":
+/*!*****************************!*\
+  !*** ./src/modules/Like.js ***!
+  \*****************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! jquery */ "jquery");
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_0__);
+
+class Like {
+  constructor() {
+    this.events();
+  }
+  events() {
+    jquery__WEBPACK_IMPORTED_MODULE_0___default()('.like-box').on('click', this.ourClickDispatcher.bind(this));
+  }
+
+  //methods
+
+  //This method will define if I want like or dislike a professor
+  ourClickDispatcher(e) {
+    var currentLikeBox = jquery__WEBPACK_IMPORTED_MODULE_0___default()(e.target).closest('.like-box'); //identifies and stores the closest ancestral HTML element with the "like-box" class ensuring that it is always pointing to the right box
+
+    if (currentLikeBox.attr('data-exists') == 'yes') {
+      //I'm going to use attr('data-exists') instead of data('exists') because this way I can listen to the element live with each interaction and not just when the page is loaded 
+      this.deleteLike(currentLikeBox);
+    } else {
+      this.createLike(currentLikeBox);
+    }
+  }
+  createLike(currentLikeBox) {
+    jquery__WEBPACK_IMPORTED_MODULE_0___default().ajax({
+      beforeSend: xhr => {
+        xhr.setRequestHeader('X-WP-Nonce', universityData.nonce); //makes WP validate the nonce code
+      },
+
+      url: universityData.root_url + '/index.php/wp-json/university/v1/manageLike',
+      type: 'POST',
+      data: {
+        'professorId': currentLikeBox.data('professor') //Will send my data-professor of single-professor.php
+      },
+
+      success: response => {
+        currentLikeBox.attr('data-exists', 'yes'); //this will make my heart full
+        var likeCount = parseInt(currentLikeBox.find('.like-count').html(), 10); //get my value of hearts count 
+        likeCount++; //up 1
+        currentLikeBox.find('.like-count').html(likeCount);
+        currentLikeBox.attr('data-like', response); //when create a new post the response return my post id
+        console.log(response);
+      },
+      error: response => {
+        console.log(response);
+      }
+    });
+  }
+  deleteLike(currentLikeBox) {
+    jquery__WEBPACK_IMPORTED_MODULE_0___default().ajax({
+      beforeSend: xhr => {
+        xhr.setRequestHeader('X-WP-Nonce', universityData.nonce); //makes WP validate the nonce code
+      },
+
+      url: universityData.root_url + '/index.php/wp-json/university/v1/manageLike',
+      type: 'DELETE',
+      data: {
+        'like': currentLikeBox.attr('data-like') //Will send my data-like with the number of the post I want delete to single-professor.php
+      },
+
+      success: response => {
+        currentLikeBox.attr('data-exists', 'no'); //this will make my heart empty
+        var likeCount = parseInt(currentLikeBox.find('.like-count').html(), 10); //get my value of hearts count 
+        likeCount--; //down 1
+        currentLikeBox.find('.like-count').html(likeCount);
+        currentLikeBox.attr('data-like', ''); //when delete a like I'll return ''
+        console.log(response);
+      },
+      error: response => {
+        console.log(response);
+      }
+    });
+  }
+}
+/* harmony default export */ __webpack_exports__["default"] = (Like);
 
 /***/ }),
 

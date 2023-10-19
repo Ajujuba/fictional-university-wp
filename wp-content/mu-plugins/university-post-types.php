@@ -93,6 +93,21 @@ function university_post_types(){
         ],
         'menu_icon' => 'dashicons-welcome-write-blog'
     ]);
+
+     #Like post type
+     register_post_type('like', [
+        'supports' => ['title'],
+        'public' => false, // we don't want that our notes appears in public searchs or to users disconected 
+        'show_ui' => true, //this line will show this in my admin dashboard
+        'labels' => [
+            'name' => 'Likes',
+            'add_new_item' => 'Add New Like',
+            'edit_item' => 'Edit Like',
+            'all_items' => 'All Likes',
+            'singular_name' => 'Like'
+        ],
+        'menu_icon' => 'dashicons-heart'
+    ]);
     
 }
 add_action('init', 'university_post_types');
