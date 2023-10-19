@@ -78,6 +78,8 @@ function university_post_types(){
 
     #Notes post type
     register_post_type('note', [
+        'capability_type' => 'note',
+        'map_meta_cap' => true,
         'show_in_rest' => true, //this line allows me to see this type of post in the WP REST API 
         'supports' => ['title', 'editor'],
         'public' => false, // we don't want that our notes appears in public searchs or to users disconected 

@@ -31,10 +31,10 @@ while (have_posts()) {
                     $userNotes->the_post(); ?>
 
                     <li data-id="<?php the_ID() ?>">
-                        <input readonly class="note-title-field" value="<?= esc_attr(get_the_title()) ?>">
+                        <input readonly class="note-title-field" value="<?= str_replace('Private: ','',esc_attr(get_the_title())) //this will show mt title without 'Private: '?>">
                         <span class="edit-note"><i class="fa fa-pencil" area-hidden="true"></i>Edit</span>
                         <span class="delete-note"><i class="fa fa-trash-o" area-hidden="true"></i>Delete</span>
-                        <textarea readonly class="note-body-field"><?= esc_attr(wp_strip_all_tags(get_the_content()))?></textarea>
+                        <textarea readonly class="note-body-field"><?= esc_textarea(wp_strip_all_tags(get_the_content()))?></textarea>
                         <span class="update-note btn btn--blue btn--small"><i class="fa fa-arrow-right" area-hidden="true"></i>Save</span>
                     </li>
 

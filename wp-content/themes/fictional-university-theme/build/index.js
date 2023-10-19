@@ -195,7 +195,7 @@ class MyNotes {
       // defines my title according what I wrote
       'content': jquery__WEBPACK_IMPORTED_MODULE_0___default()(".new-note-body").val(),
       // defines my content according what I wrote
-      'status': 'publish' //This line define my post like publish, so will appears in real time
+      'status': 'publish' //This line define my post like publish, so will appears in real time. If I changed it to private so that only the post owner sees this post, but the front is not confiable, so did this change in my backend
     };
 
     jquery__WEBPACK_IMPORTED_MODULE_0___default().ajax({

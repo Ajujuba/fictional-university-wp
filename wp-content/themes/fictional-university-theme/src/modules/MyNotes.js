@@ -91,7 +91,7 @@ class MyNotes{
             // The WP REST API is looking for specific property names, so if you can change the title, give 'title', if you want edit de body, give 'content'
             'title': $(".new-note-title").val(), // defines my title according what I wrote
             'content': $(".new-note-body").val(), // defines my content according what I wrote
-            'status': 'publish' //This line define my post like publish, so will appears in real time
+            'status': 'publish' //This line define my post like publish, so will appears in real time. If I changed it to private so that only the post owner sees this post, but the front is not confiable, so did this change in my backend
         }
 
         $.ajax({
