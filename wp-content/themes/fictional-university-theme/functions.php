@@ -184,3 +184,10 @@ function makeNotePrivate($data, $postarr){
 //this parameter '2' indicates that my 'makeNotePrivate' function will have 2 parameters, instead of 1 by default. 
 //And the '10' is the priority when returning the function, this is a problem if you are going to call many functions for the same hook, in this case each call to the hook I need to define which fn I want to execute first (the smallest number executes first)
 add_filter('wp_insert_post_data', 'makeNotePrivate', 10, 2);
+
+#Ignore some files and folders in my export with my plugin all-in-one-wp-migration
+function ignoreCertainFiles($exclude_filters){
+    $exclude_filters[] = 'themes/fictional-university-theme/node_modules';
+    return $exclude_filters;
+}
+add_filter('ai1wm_exclude_content_from_export', 'ignoreCertainFiles');
