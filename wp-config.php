@@ -19,18 +19,39 @@
  * @package WordPress
  */
 
+ require_once dirname(__FILE__) . '/vendor/autoload.php';
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv->load();
+
+
 // ** Definições de MySQL - obtenha estes dados do seu serviço de alojamento** //
-/** O nome da base de dados do WordPress */
-define( 'DB_NAME', 'fictional-university-wp' );
+#Preparing the environment to connect with both banks (prod and local)
+define('DB_NAME', $_ENV['DB_NAME']);
+define('DB_USER', $_ENV['DB_USER']);
+define('DB_PASSWORD', $_ENV['DB_PASSWORD']);
+define('DB_HOST', $_ENV['DB_HOST']);
 
-/** O nome do utilizador de MySQL */
-define( 'DB_USER', 'root' );
+#this is the suggestion of the course, but I'll use .env
+// if(strstr($_SERVER['SERVER_NAME'], 'localhost')){
+// 	/** O nome da base de dados do WordPress */
+// 	define( 'DB_NAME', 'fictional-university-wp' );
+// 	/** O nome do utilizador de MySQL */
+// 	define( 'DB_USER', 'root' );
+// 	/** A password do utilizador de MySQL  */
+// 	define( 'DB_PASSWORD', '' );
+// 	/** O nome do serviddor de  MySQL  */
+// 	define( 'DB_HOST', 'localhost' );
+// }else{
+// 	/** O nome da base de dados do WordPress */
+// 	define( 'DB_NAME', 'yourlivedb' );
+// 	/** O nome do utilizador de MySQL */
+// 	define( 'DB_USER', 'yourliveuser' );
+// 	/** A password do utilizador de MySQL  */
+// 	define( 'DB_PASSWORD', 'yourpasstodb' );
+// 	/** O nome do serviddor de  MySQL  */
+// 	define( 'DB_HOST', 'yourhost' );
+// }
 
-/** A password do utilizador de MySQL  */
-define( 'DB_PASSWORD', '' );
-
-/** O nome do serviddor de  MySQL  */
-define( 'DB_HOST', 'localhost' );
 
 /** O "Database Charset" a usar na criação das tabelas. */
 define( 'DB_CHARSET', 'utf8mb4' );

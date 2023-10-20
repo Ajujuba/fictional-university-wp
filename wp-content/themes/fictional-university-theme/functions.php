@@ -186,8 +186,18 @@ function makeNotePrivate($data, $postarr){
 add_filter('wp_insert_post_data', 'makeNotePrivate', 10, 2);
 
 #Ignore some files and folders in my export with my plugin all-in-one-wp-migration
+#This not working very well... 
+// function ignoreCertainFiles($exclude_filters){
+//     $exclude_filters[] = 'themes/fictional-university-theme/node_modules';
+//     return $exclude_filters;
+// }
+// add_filter('ai1wm_exclude_content_from_export', 'ignoreCertainFiles');
+
+#I tried this new hook and 
 function ignoreCertainFiles($exclude_filters){
-    $exclude_filters[] = 'themes/fictional-university-theme/node_modules';
+    $exclude_filters[] = 'fictional-university-theme/node_modules';
+    $exclude_filters[] = 'twentytwentyone';
+    $exclude_filters[] = 'twentytwentytwo';
     return $exclude_filters;
 }
-add_filter('ai1wm_exclude_content_from_export', 'ignoreCertainFiles');
+add_filter('ai1wm_exclude_themes_from_export', 'ignoreCertainFiles');
