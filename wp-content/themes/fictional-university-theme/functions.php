@@ -193,7 +193,7 @@ add_filter('wp_insert_post_data', 'makeNotePrivate', 10, 2);
 // }
 // add_filter('ai1wm_exclude_content_from_export', 'ignoreCertainFiles');
 
-#I tried this new hook and 
+#I tried this new hook and works
 function ignoreCertainFiles($exclude_filters){
     $exclude_filters[] = 'fictional-university-theme/node_modules';
     $exclude_filters[] = 'twentytwentyone';
