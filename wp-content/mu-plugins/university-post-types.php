@@ -9,7 +9,7 @@ function university_post_types(){
         'show_in_rest' => true, //This enables the WP modern editor because I enabled JS in my custom type
         'supports' => ['title', 'editor', 'excerpt'], //if I don't specify 'editor', it will load the old editor. But if I remove this line and leave the top one, the new editor works
         'rewrite' => ['slug'=>'events'],
-        'has_archive' => true,
+        'has_archive' => true, // indicates that the custom post type will have an automatically created archive page with a default URL that matches the custom post type slug.
         'public' => true,
         'labels' => [
             'name' => 'Events',
