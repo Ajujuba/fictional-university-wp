@@ -120,7 +120,7 @@ get_header();
 </div>
 
 <?php
-//the param of the function get_page_by_path() is the slug of the page, the last part of my link
+#the param of the function get_page_by_path() is the slug of the page, the last part of my link
 $page1 = get_page_by_path('content-1');
 $page2 = get_page_by_path('content-2');
 
@@ -136,7 +136,7 @@ $page2 = get_page_by_path('content-2');
                 <p> <?= esc_html(wp_trim_words($page1->post_content, 50, '...'))?></p>
             </div>
             <div class="t-center no-margin">
-                <a class="btn btn--blue" href="<?= $page1->guid ?>">See more</a>
+                <a class="animation-btn-homepage btn btn--blue" href="<?= $page1->guid ?>">See more</a>
             </div>
         </div>
         <div class="col-homepage col-right-homepage">
@@ -148,7 +148,7 @@ $page2 = get_page_by_path('content-2');
                 <p> <?= esc_html(wp_trim_words($page2->post_content, 50, '...'))?></p>
             </div>
             <div class="t-center no-margin">
-                <a class="btn btn--yellow" href="<?= $page2->guid ?>">Learn more</a>
+                <a class="animation-btn-homepage btn btn--yellow" href="<?= $page2->guid ?>">Learn more</a>
             </div>
         </div>
     </div>

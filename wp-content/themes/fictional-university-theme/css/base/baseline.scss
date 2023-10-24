@@ -22,6 +22,12 @@
   }
 }
 
+@mixin atGiant{
+  @media (min-width: 2000px) {
+    @content;
+  }
+}
+
 body {
   color: #333;
   font-family: "Roboto", sans-serif;
