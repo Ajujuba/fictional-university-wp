@@ -1,0 +1,42 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Word Count\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-25 08:50+0000\n"
+"PO-Revision-Date: 2023-10-25 08:55+0000\n"
+"Last-Translator: \n"
+"Language-Team: Portuguese (Brazil)\n"
+"Language: pt_BR\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Loco https://localise.biz/\n"
+"X-Loco-Version: 2.6.6; wp-6.3.1\n"
+"X-Domain: wcpdomain"
+
+#. Description of the plugin
+msgid "A truly Amazing Pugin"
+msgstr ""
+
+#. Author of the plugin
+msgid "Brad"
+msgstr ""
+
+#. Author URI of the plugin
+msgid "https://udemy.com"
+msgstr ""
+
+#: our-first-unique-plugin.php:46 our-first-unique-plugin.php:50
+msgid "This post has:"
+msgstr "Esse post tem"
+
+#. title of the page that appears in my browser tab
+#. Name of the plugin
+#: our-first-unique-plugin.php:142
+msgid "Word Count"
+msgstr "Contador de palavras"
+
+#: our-first-unique-plugin.php:46 our-first-unique-plugin.php:50
+msgid "words"
+msgstr "palavras"

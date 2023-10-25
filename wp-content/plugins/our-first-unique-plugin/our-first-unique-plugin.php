@@ -6,6 +6,8 @@
     Varsion: 1.0
     Author: Brad
     Author URI: https://udemy.com
+    Text Domain: wcpdomain
+    Domain path: /languages
 */
 
 #------------------------------------------
@@ -17,6 +19,12 @@ class WordCountAndTimePlugin{
         add_action('admin_menu', [$this, 'countWordAdminPage']); //I called it because my fn is in a class, them I need to explain: 1 param: 'search in this(inside this class).  2 param: the fn called ... '
         add_action('admin_init', [$this, 'settings']); //config my field settings
         add_filter('the_content', [$this, 'ifWrap']); // show my datas and counts
+        add_action('init', [$this, 'languages']); //this will point to WP where is my translations
+    }
+
+    #path to my translation file
+    function languages(){
+        load_plugin_textdomain('wcpdomain', false, dirname(plugin_basename(__FILE__)) . '/languages');
     }
 
     #validating the content change only when I am on a blog post screen and if the user has selected any of the checkboxes
@@ -37,11 +45,11 @@ class WordCountAndTimePlugin{
         }
 
         if(get_option('wcp_wordcount', '1')){
-           $html  .= 'This post has: ' . $wordCount . ' words. <br>'; //show my count of words
+           $html  .=  esc_html__('This post has:', 'wcpdomain') . ' ' . $wordCount . ' ' . __('words', 'wcpdomain') . '.<br>'; //show my count of words
         }
 
         if(get_option('wcp_charcount', '1')){
-            $html  .= 'This post has: ' . strlen(strip_tags($content)) . ' words. <br>'; //show my count of words
+            $html  .= esc_html__('This post has:', 'wcpdomain') . ' ' . strlen(strip_tags($content)) . ' ' . __('words', 'wcpdomain') . '.<br>'; //show my count of words
         }
 
         if(get_option('wcp_readtime', '1')){
@@ -133,7 +141,7 @@ class WordCountAndTimePlugin{
         #this function creates a new page in Settings main menu
         add_options_page(
             'Word Count Settings', //title of the page that appears in my browser tab
-            'Word Count',  //Name that appears in settings menu
+            __('Word Count', 'wcpdomain'),  //Name that appears in settings menu
             'manage_options', //what permission can see this new page
             'word-count-settings-page', //the slug used at the end of my URL, must be unique
             [$this, 'ourHTML'] //our function that is in $this(inside this class) called 'ourHTML'
