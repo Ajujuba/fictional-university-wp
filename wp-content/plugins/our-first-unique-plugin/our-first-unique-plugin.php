@@ -15,7 +15,47 @@ class WordCountAndTimePlugin{
 
     function __construct(){
         add_action('admin_menu', [$this, 'countWordAdminPage']); //I called it because my fn is in a class, them I need to explain: 1 param: 'search in this(inside this class).  2 param: the fn called ... '
-        add_action('admin_init', [$this, 'settings']);
+        add_action('admin_init', [$this, 'settings']); //config my field settings
+        add_filter('the_content', [$this, 'ifWrap']); // show my datas and counts
+    }
+
+    #validating the content change only when I am on a blog post screen and if the user has selected any of the checkboxes
+    function ifWrap($content){
+        if(is_main_query() && is_single() && ( get_option('wcp_wordcount', '0') == '1' || get_option('wcp_charcount', '0') == '1' || get_option('wcp_readtime', '0') == '1' ) ){
+            return $this->createHTML($content);
+        }
+        return $content;
+    }
+
+    #create our block with html show the datas
+    function createHTML($content){
+        $html = '<h3>' . esc_html(get_option('wcp_headline', 'Post Statistics')) . '</h3><p>';
+
+        #get word count once because both wordcount and read time will need it
+        if(get_option('wcp_wordcount', '1') || get_option('wcp_readtime', '1') ){
+            $wordCount = str_word_count(strip_tags($content)); //calculate my content
+        }
+
+        if(get_option('wcp_wordcount', '1')){
+           $html  .= 'This post has: ' . $wordCount . ' words. <br>'; //show my count of words
+        }
+
+        if(get_option('wcp_charcount', '1')){
+            $html  .= 'This post has: ' . strlen(strip_tags($content)) . ' words. <br>'; //show my count of words
+        }
+
+        if(get_option('wcp_readtime', '1')){
+            #here I'm supposed that a reader read 255 words per minute and round() will round my result to the intege
+            $html  .= 'This post will take about: ' . round($wordCount/255) . ' minute(s) to read. <br>'; //calculate my read time
+        }
+
+        $html .= '</p>';
+
+        #define the position of my block
+        if(get_option('wcp_location', '0') == '0'){
+            return $html . $content;
+        }
+        return $content . $html;
     }
 
     #This function will config our fields of the form
@@ -49,25 +89,24 @@ class WordCountAndTimePlugin{
         register_setting('wordcountplugin', 'wcp_headline', ['sanitize_callback' => 'sanitize_text_field', 'default' => 'Post Statistics']);
 
         #word count
-        add_settings_field('wcp_wordcount', 'Word Count', [$this, 'wordcountHTML'], 'word-count-settings-page', 'wcp_first_section');
+        add_settings_field('wcp_wordcount', 'Word Count', [$this, 'checkboxHTML'], 'word-count-settings-page', 'wcp_first_section', ['theName' => 'wcp_wordcount']);
         register_setting('wordcountplugin', 'wcp_wordcount', ['sanitize_callback' => 'sanitize_text_field', 'default' => '1']);
 
         #character count
-        add_settings_field('wcp_charcount', 'Character Count', [$this, 'charcountHTML'], 'word-count-settings-page', 'wcp_first_section');
+        add_settings_field('wcp_charcount', 'Character Count', [$this, 'checkboxHTML'], 'word-count-settings-page', 'wcp_first_section', ['theName' => 'wcp_charcount']);
         register_setting('wordcountplugin', 'wcp_charcount', ['sanitize_callback' => 'sanitize_text_field', 'default' => '1']);
 
         #read time
-        add_settings_field('wcp_readtime', 'Read Time', [$this, 'readtimeHTML'], 'word-count-settings-page', 'wcp_first_section');
+        add_settings_field('wcp_readtime', 'Read Time', [$this, 'checkboxHTML'], 'word-count-settings-page', 'wcp_first_section', ['theName' => 'wcp_readtime']);
         register_setting('wordcountplugin', 'wcp_readtime', ['sanitize_callback' => 'sanitize_text_field', 'default' => '1']);
     }
 
-
+    #if my input has value != 1/0 then return error
     function sanitizeLocation($input){
         if($input != '0' && $input != '1'){
             add_settings_error('wcp_location', 'wcp_location_error', 'Display location must be either beggining or end.');
             return get_option('wcp_location');
         }
-
         return $input;
     }
 
@@ -84,19 +123,9 @@ class WordCountAndTimePlugin{
         <input type="text" name="wcp_headline" value="<?= get_option('wcp_headline') ? esc_attr(get_option('wcp_headline')) : ''?>">
     <?php }
 
-    #field wcp_wordcount
-    function wordcountHTML(){ ?>
-        <input type="checkbox" name="wcp_wordcount" value="1" <?php checked(get_option('wcp_wordcount', '1'))?>>
-    <?php }
-
-    #field wcp_charcount
-    function charcountHTML(){ ?>
-        <input type="checkbox" name="wcp_charcount" value="1" <?php checked(get_option('wcp_charcount', '1'))?>>
-    <?php }
-
-    #field wcp_readtime
-    function readtimeHTML(){ ?>
-        <input type="checkbox" name="wcp_readtime" value="1" <?php checked(get_option('wcp_readtime', '1'))?>>
+    // reusable checkbox function for fields wcp_wordcount, wcp_charcount and wcp_readtime
+    function checkboxHTML($args) { ?>
+        <input type="checkbox" name="<?php echo $args['theName'] ?>" value="1" <?php checked(get_option($args['theName']), '1') ?>>
     <?php }
 
     #Here I want to add a new page inside my admin menu in settigns->my new page
@@ -123,7 +152,6 @@ class WordCountAndTimePlugin{
                 ?>
             </form>
         </div>
-
     <?php }
 }
 
