@@ -154,6 +154,7 @@ class WordCountAndTimePlugin{
             <h1>Word Count settings</h1>
             <form action="options.php" method="post">
                 <?php 
+                    //here we don't need call settings_errors() because if you is an a config page, WP call this for you
                     settings_fields('wordcountplugin'); //By placing the line, WP will do all the work looking at this group of fields that we defined above... it will place nonce and everything else that is necessary
                     do_settings_sections('word-count-settings-page');
                     submit_button();
