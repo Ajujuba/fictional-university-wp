@@ -5,3 +5,4 @@ wp-content/themes/fictional-university-theme/node_modules
 wp-content/ai1wm-backups
 vendor
 .env
+wp-content/plugins/quiz-are-you-paying-attention/node_modules

@@ -3,7 +3,7 @@
 /*
     Plugin Name: Word Count
     Description: A truly Amazing Pugin
-    Varsion: 1.0
+    Version: 1.0
     Author: Brad
     Author URI: https://udemy.com
     Text Domain: wcpdomain
