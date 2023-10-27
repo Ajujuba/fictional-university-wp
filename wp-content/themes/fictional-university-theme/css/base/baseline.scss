@@ -23,7 +23,7 @@
 }
 
 @mixin atGiant{
-  @media (min-width: 2000px) {
+  @media (min-width: 1500px) {
     @content;
   }
 }
