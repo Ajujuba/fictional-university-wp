@@ -28,16 +28,19 @@ class AreYouPayingAttention {
 
     #Register my block here with the same slug of my JS
     function adminAssetsPhp() {
+        wp_register_style('quizeditcss', plugin_dir_url(__FILE__) . 'build/index.css'); //here we register our css generated for our scss
         wp_register_script(
             'ournewblocktype', //Name to identify this script, slug
             plugin_dir_url(__FILE__) . 'build/index.js', //path to my js file
-            ['wp-blocks', 'wp-element']//list of dependencies that need to be loaded before my js
+            ['wp-blocks', 'wp-element', 'wp-editor']//list of dependencies that need to be loaded before my js
         );
         register_block_type(
             'ourplugin/are-you-paying-attention',  //The same name of my slug in JS
             [
                 'editor_script' => 'ournewblocktype', //name to my script of my block
+                'editor_style' => 'quizeditcss', //called our css in our block
                 'render_callback' => [$this, 'theHtml'] //This will call my function that render my block in front
+
             ]
         );
     }

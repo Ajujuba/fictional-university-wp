@@ -2,6 +2,18 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
+/***/ "./src/index.scss":
+/*!************************!*\
+  !*** ./src/index.scss ***!
+  \************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
 /***/ "react":
 /*!************************!*\
   !*** external "React" ***!
@@ -9,6 +21,16 @@
 /***/ (function(module) {
 
 module.exports = window["React"];
+
+/***/ }),
+
+/***/ "@wordpress/components":
+/*!************************************!*\
+  !*** external ["wp","components"] ***!
+  \************************************/
+/***/ (function(module) {
+
+module.exports = window["wp"]["components"];
 
 /***/ })
 
@@ -89,6 +111,11 @@ var __webpack_exports__ = {};
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _index_scss__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./index.scss */ "./src/index.scss");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__);
+
+ //This line will created our style css config from our scss
 
 wp.blocks.registerBlockType('ourplugin/are-you-paying-attention',
 // slug
@@ -99,43 +126,85 @@ wp.blocks.registerBlockType('ourplugin/are-you-paying-attention',
   category: "common",
   //block category
   attributes: {
-    skyColor: {
+    question: {
       type: "string"
     },
-    grassColor: {
-      type: "string"
-    }
+    answers: {
+      type: "array",
+      default: ["orange", 'blue', 'red']
+    } //We defined default="" because when loading the page for the first time, we can see at least 1 answer field
   },
-  edit: function (props) {
-    function updateSkyColor(event) {
-      props.setAttributes({
-        skyColor: event.target.value
-      }); //this line will set my attr in my DB with my value?
-    }
 
-    function updateGrassColor(event) {
-      props.setAttributes({
-        grassColor: event.target.value
-      });
-    }
-    return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
-      type: "test",
-      placeholder: "Sky color",
-      value: props.attributes.skyColor,
-      onChange: updateSkyColor
-    }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
-      type: "test",
-      placeholder: "grass color",
-      value: props.attributes.grassColor,
-      onChange: updateGrassColor
-    }));
-  },
+  edit: EditComponent,
   //Control what you see in the editor screen
   save: function (props) {
     return null; //let's remove from JS the responsibility of returning something and sending it to php, in the database we won't save anything static, we'll let php handle the values in real time
   } //Controls what the public sees in the content
 } //configuration object 
 );
+
+function EditComponent(props) {
+  //This fn is linked to an input from the Wordpress components and not to a traditional input so we have facilities, here we don't need to receive the event and search within it, we can just receive 'value' and set it in the attribute.
+  function updateQuestion(value) {
+    props.setAttributes({
+      question: value
+    });
+  }
+  function deleteAnswer(indexToDelete) {
+    //the filter return  a new array with true for each item in the array, except for the one we want to delete
+    const newAnswers = props.attributes.answers.filter(function (x, index) {
+      return index != indexToDelete;
+    });
+    props.setAttributes({
+      answers: newAnswers
+    });
+  }
+  return (
+    //our JSX:
+    (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "paying-attention-edit-block"
+    }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.TextControl, {
+      style: {
+        fontSize: "20px"
+      },
+      label: "Question: ",
+      value: props.attributes.question,
+      onChange: updateQuestion
+    }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
+      style: {
+        fontSize: "13px",
+        margin: "20px 0px 8px 0px"
+      }
+    }, "Answers: "), props.attributes.answers.map(function (answer, index) {
+      //map will see my array, each element
+      return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Flex, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.FlexBlock, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.TextControl, {
+        value: answer,
+        onChange: newValue => {
+          const newAnswers = props.attributes.answers.concat([]); //Created a copy of array
+          newAnswers[index] = newValue;
+          props.setAttributes({
+            answers: newAnswers
+          });
+        },
+        autoFocus: answer == undefined
+      })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.FlexItem, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Button, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Icon, {
+        className: "mark-as-correct",
+        icon: "star-empty"
+      }))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.FlexItem, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Button, {
+        variant: "link",
+        className: "attention-delete",
+        onClick: () => deleteAnswer(index)
+      }, "Delete")));
+    }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Button, {
+      variant: "primary",
+      onClick: () => {
+        props.setAttributes({
+          answers: props.attributes.answers.concat([undefined])
+        }); //Set undefined to make my autofocus on this field when creating my TextControl
+      }
+    }, " Add another answer"))
+  );
+}
 }();
 /******/ })()
 ;
