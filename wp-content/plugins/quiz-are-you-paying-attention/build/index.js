@@ -117,6 +117,28 @@ __webpack_require__.r(__webpack_exports__);
 
  //This line will created our style css config from our scss
 
+function ourStartFunction() {
+  let locked = false;
+
+  //WP calls this function each and every time any of the data in the block changes, the advantage is that the data is always updated because the function is constantly called
+  wp.data.subscribe(function () {
+    //searches within all blocks on the page for any 'correctAnswer' set to 'undefined'
+    const results = wp.data.select("core/block-editor").getBlocks().filter(function (block) {
+      return block.name == "ourplugin/are-you-paying-attention" && block.attributes.correctAnswer == undefined;
+    });
+    //If the 'CorrectAnswer' property is undefined, then I want to block the page from being saved
+    if (results.length && locked == false) {
+      locked = true;
+      wp.data.dispatch("core/editor").lockPostSaving("noanswer");
+    }
+    //If the 'CorrectAnswer' property is not undefined, I want to allow the page to be saved
+    if (!results.length && locked) {
+      locked = false;
+      wp.data.dispatch("core/editor").unlockPostSaving("noanswer");
+    }
+  });
+}
+ourStartFunction();
 wp.blocks.registerBlockType('ourplugin/are-you-paying-attention',
 // slug
 {
@@ -131,10 +153,14 @@ wp.blocks.registerBlockType('ourplugin/are-you-paying-attention',
     },
     answers: {
       type: "array",
-      default: ["orange", 'blue', 'red']
-    } //We defined default="" because when loading the page for the first time, we can see at least 1 answer field
+      default: [""]
+    },
+    //We defined default="" because when loading the page for the first time, we can see at least 1 answer field
+    correctAnswer: {
+      type: "number",
+      default: undefined
+    }
   },
-
   edit: EditComponent,
   //Control what you see in the editor screen
   save: function (props) {
@@ -157,6 +183,21 @@ function EditComponent(props) {
     });
     props.setAttributes({
       answers: newAnswers
+    });
+    if (indexToDelete == props.attributes.correctAnswer) {
+      props.setAttributes({
+        correctAnswer: undefined
+      }); //If I delete my correctAnswer, I want set undefined again in correctAnswer
+    } else if (indexToDelete < props.attributes.correctAnswer) {
+      props.setAttributes({
+        correctAnswer: props.attributes.correctAnswer - 1 //when I'm deleting an answer which has a smaller index number than the correct one, the correct answer will be shifted to the subsequent item in the array because of the new order. To resolve this add this elseif 
+      });
+    }
+  }
+
+  function markAsCorrect(index) {
+    props.setAttributes({
+      correctAnswer: index
     });
   }
   return (
@@ -187,9 +228,11 @@ function EditComponent(props) {
           });
         },
         autoFocus: answer == undefined
-      })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.FlexItem, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Button, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Icon, {
+      })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.FlexItem, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Button, {
+        onClick: () => markAsCorrect(index)
+      }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Icon, {
         className: "mark-as-correct",
-        icon: "star-empty"
+        icon: props.attributes.correctAnswer == index ? "star-filled" : "star-empty"
       }))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.FlexItem, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Button, {
         variant: "link",
         className: "attention-delete",
