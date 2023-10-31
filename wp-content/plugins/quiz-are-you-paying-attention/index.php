@@ -47,11 +47,22 @@ class AreYouPayingAttention {
 
     #With my PHP making my return, I can update here and in my front is updated too automatically
     function theHtml($attributes){
+
+        //loading our script and style to the block in the frontend
+        if(!is_admin()){
+            wp_enqueue_script('attentionFrontend', plugin_dir_url(__FILE__) . 'build/frontend.js' , ['wp-element']);
+            wp_enqueue_style('attentionFrontendStyle', plugin_dir_url(__FILE__) . 'build/frontend.css');
+        }
         # I can return this:
         //return '<h2>Today all is completely' .  esc_html($attributes['skyColor']) . ' but I am ' . esc_html($attributes['grassColor']) . '.</h2>';
         # OR this block 'ob_start': says me that all things that are in between, will be returned. The diference is only in use HTML or string concatenated with many variables
         ob_start(); ?>
-        <h3>Today all is completely <?= esc_html($attributes['skyColor']) ?>  but I am  <?= esc_html($attributes['grassColor']) ?> !!!</h3>
+            <div class="paying-attention-update-me">
+                <!-- Here I'm going to give display:none so it doesn't appear to the user, but it will be loaded in my DOM so my js can access the values -->
+                <pre style="display:none;"> 
+                    <?= wp_json_encode($attributes) //loading my datas of my DB that re json, but when we recevied in $attributes, e have an array, so we convert again in a json?> 
+                </pre>
+            </div>
     <?php return ob_get_clean();
     }
 }
