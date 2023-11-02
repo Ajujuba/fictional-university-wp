@@ -1,5 +1,6 @@
 import "./index.scss" //This line will created our style css config from our scss
-import {TextControl, Flex, FlexBlock, FlexItem, Button, Icon} from "@wordpress/components"
+import {TextControl, Flex, FlexBlock, FlexItem, Button, Icon, PanelBody, PanelRow, ColorPicker} from "@wordpress/components"
+import {InspectorControls, BlockControls, AlignmentToolbar} from "@wordpress/block-editor" //our package JS is smart to search this in  our browser global scope
 
 function ourStartFunction(){
 
@@ -35,8 +36,20 @@ wp.blocks.registerBlockType(
         attributes: {
             question: {type: "string"},
             answers: {type: "array", default: [""]}, //We defined default="" because when loading the page for the first time, we can see at least 1 answer field
-            correctAnswer: {type: "number", default: undefined}
+            correctAnswer: {type: "number", default: undefined},
+            bgColor: {type: "string", default: "#EBEBEB"}, 
+            theAlignment: {type: "string", default: "left"}
         },
+        description: "Give your audience a chance to prove their comprehension.",
+        example: {
+            attributes: {
+                question: "What is my name?",
+                correctAnswer: 3,
+                answers: ["Meowsalot", "Barksalot", "Purrsloud", "Brad"],
+                theAlignment: "center",
+                bgColor: "#CFE8F1"
+            }
+        }, //Here we create our preview
         edit: EditComponent , //Control what you see in the editor screen
         save: function (props) {
             return null; //let's remove from JS the responsibility of returning something and sending it to php, in the database we won't save anything static, we'll let php handle the values in real time
@@ -71,7 +84,21 @@ function EditComponent (props) {
     }
 
     return ( //our JSX:
-        <div className="paying-attention-edit-block">
+        <div className="paying-attention-edit-block" style={{backgroundColor: props.attributes.bgColor}}>
+            {/* This part is about my text aligment of the block, when the people choose, nothing change here, only in my front*/}
+            <BlockControls>
+                <AlignmentToolbar value={props.attributes.theAlignment} onChange={x => props.setAttributes({theAlignment: x})}></AlignmentToolbar>
+            </BlockControls>
+            {/* Our adm tab of the block in admin page - If we used this sintax like here, WP knows exactly to do with this */}
+            <InspectorControls>
+                <PanelBody title="Background Color: " initialOpen={true}>
+                    <PanelRow> 
+                        {/* here I am creating a ColorPicker component that will open my color palette, by default it is gray, and as I already pass the attribute, if it changes it already saves what I choose in the DB */}
+                        <ColorPicker color={props.attributes.bgColor} onChangeComplete={x => props.setAttributes({bgColor: x.hex})}></ColorPicker>
+                    </PanelRow>
+                </PanelBody>
+            </InspectorControls>
+            {/* Our block inside the admin page */}
             <TextControl style={{fontSize: "20px"}} label="Question: " value={props.attributes.question} onChange={updateQuestion}></TextControl>
             <p style={{fontSize: "13px", margin: "20px 0px 8px 0px"}} >Answers: </p>
             {props.attributes.answers.map(function (answer, index){  //map will see my array, each element
