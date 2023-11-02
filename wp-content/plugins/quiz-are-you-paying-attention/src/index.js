@@ -1,6 +1,6 @@
 import "./index.scss" //This line will created our style css config from our scss
 import {TextControl, Flex, FlexBlock, FlexItem, Button, Icon, PanelBody, PanelRow, ColorPicker} from "@wordpress/components"
-import {InspectorControls, BlockControls, AlignmentToolbar} from "@wordpress/block-editor" //our package JS is smart to search this in  our browser global scope
+import {InspectorControls, BlockControls, AlignmentToolbar, useBlockProps} from "@wordpress/block-editor" //our package JS is smart to search this in  our browser global scope
 
 function ourStartFunction(){
 
@@ -58,6 +58,11 @@ wp.blocks.registerBlockType(
 )
 
 function EditComponent (props) {
+    const blockProps = useBlockProps({
+        className: "paying-attention-edit-block" ,
+        style: {backgroundColor: props.attributes.bgColor}
+    }); //To use block.json we'll give ...blockprops to our div, and here we can send an object, and in that object pass our styles, and anything we pass here, WP will know how to merge that into its properties
+
     //This fn is linked to an input from the Wordpress components and not to a traditional input so we have facilities, here we don't need to receive the event and search within it, we can just receive 'value' and set it in the attribute.
     function updateQuestion(value){
         props.setAttributes({question: value})
@@ -84,7 +89,8 @@ function EditComponent (props) {
     }
 
     return ( //our JSX:
-        <div className="paying-attention-edit-block" style={{backgroundColor: props.attributes.bgColor}}>
+        //to use block.json add here BlockProps and called {...blockProps} because whatever props that live inside blockProps,each one will be apply to this wrap element
+        <div {...blockProps} >
             {/* This part is about my text aligment of the block, when the people choose, nothing change here, only in my front*/}
             <BlockControls>
                 <AlignmentToolbar value={props.attributes.theAlignment} onChange={x => props.setAttributes({theAlignment: x})}></AlignmentToolbar>

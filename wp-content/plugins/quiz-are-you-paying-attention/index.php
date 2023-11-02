@@ -28,19 +28,27 @@ class AreYouPayingAttention {
 
     #Register my block here with the same slug of my JS
     function adminAssetsPhp() {
-        wp_register_style('quizeditcss', plugin_dir_url(__FILE__) . 'build/index.css'); //here we register our css generated for our scss
-        wp_register_script(
-            'ournewblocktype', //Name to identify this script, slug
-            plugin_dir_url(__FILE__) . 'build/index.js', //path to my js file
-            ['wp-blocks', 'wp-element', 'wp-editor']//list of dependencies that need to be loaded before my js
-        );
-        register_block_type(
-            'ourplugin/are-you-paying-attention',  //The same name of my slug in JS
-            [
-                'editor_script' => 'ournewblocktype', //name to my script of my block
-                'editor_style' => 'quizeditcss', //called our css in our block
-                'render_callback' => [$this, 'theHtml'] //This will call my function that render my block in front
+        #Original way to create custom blocks
+        // wp_register_style('quizeditcss', plugin_dir_url(__FILE__) . 'build/index.css'); //here we register our css generated for our scss
+        // wp_register_script(
+        //     'ournewblocktype', //Name to identify this script, slug
+        //     plugin_dir_url(__FILE__) . 'build/index.js', //path to my js file
+        //     ['wp-blocks', 'wp-element', 'wp-editor']//list of dependencies that need to be loaded before my js
+        // );
+        // register_block_type(
+        //     'ourplugin/are-you-paying-attention',  //The same name of my slug in JS
+        //     [
+        //         'editor_script' => 'ournewblocktype', //name to my script of my block
+        //         'editor_style' => 'quizeditcss', //called our css in our block
+        //         'render_callback' => [$this, 'theHtml'] //This will call my function that render my block in front
 
+        //     ]
+        // );
+        #Creating custom blocks using block.json
+        register_block_type(
+            __DIR__,  //Folder/path that contains the block.json
+            [
+                'render_callback' => [$this, 'theHtml'] //This will call my function that render my block in front
             ]
         );
     }
@@ -50,8 +58,8 @@ class AreYouPayingAttention {
 
         //loading our script and style to the block in the frontend
         if(!is_admin()){
-            wp_enqueue_script('attentionFrontend', plugin_dir_url(__FILE__) . 'build/frontend.js' , ['wp-element']);
-            wp_enqueue_style('attentionFrontendStyle', plugin_dir_url(__FILE__) . 'build/frontend.css');
+            wp_enqueue_script('attentionFrontend', plugin_dir_url(__FILE__) . 'build/frontend.js' , ['wp-element']); // Even using block.json I will continue loading my .js from the front here, so it is only used on the front (this is because I have a render function in PHP)
+            //wp_enqueue_style('attentionFrontendStyle', plugin_dir_url(__FILE__) . 'build/frontend.css'); //comment this line bacause now I'll load my css from block.json
         }
         # I can return this:
         //return '<h2>Today all is completely' .  esc_html($attributes['skyColor']) . ' but I am ' . esc_html($attributes['grassColor']) . '.</h2>';
