@@ -1,5 +1,5 @@
 <?php 
-
+#link to REST API: https://localhost/fictional-university-wp/index.php/wp-json/featuredProfessor/v1/getHTML?profId=71
 function generateProfessorHTML($id){
 
     $profPost = new WP_Query([
@@ -23,7 +23,7 @@ function generateProfessorHTML($id){
                         $relatedPrograms = get_field('related_programs');
 
                         if(isset($relatedPrograms)){ ?>
-                            <p>Name teaches:
+                            <p><?= esc_html(get_the_title()) ?> teaches:
                                 <?php
                                     foreach($relatedPrograms as $key => $program){
                                         echo get_the_title($program);
