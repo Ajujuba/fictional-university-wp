@@ -131,6 +131,7 @@ __webpack_require__.r(__webpack_exports__);
  //This imports the useSelect function from the WordPress state management package. This function is used to fetch data from the WordPress global state.
  //This imports the useState and useEffect functions from React. They are used to manage local state and side effects in the React component.
  //This imports the apiFetch function, which is used to make requests to the WordPress REST API.
+const __ = wp.i18n.__; //create a shortcut from the global scope of WP, The Loco Translate doens't work very well if we not use this directly
 
 wp.blocks.registerBlockType("ourplugin/featured-professor", {
   title: "Professor Callout",
@@ -213,7 +214,7 @@ function EditComponent(props) {
     })
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
     value: "Select a professor"
-  }, "Select a professor"), allProfs.map(prof => {
+  }, __('Select a professor', 'featured-professor')), allProfs.map(prof => {
     return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
       value: prof.id,
       selected: props.attributes.profId == prof.id

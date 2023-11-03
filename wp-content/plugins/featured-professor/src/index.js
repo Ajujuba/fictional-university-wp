@@ -2,6 +2,7 @@ import "./index.scss"
 import {useSelect} from "@wordpress/data" //This imports the useSelect function from the WordPress state management package. This function is used to fetch data from the WordPress global state.
 import {useState, useEffect} from "react" //This imports the useState and useEffect functions from React. They are used to manage local state and side effects in the React component.
 import apiFetch from "@wordpress/api-fetch" //This imports the apiFetch function, which is used to make requests to the WordPress REST API.
+const __ = wp.i18n.__ //create a shortcut from the global scope of WP, The Loco Translate doens't work very well if we not use this directly
 
 wp.blocks.registerBlockType("ourplugin/featured-professor", {
   title: "Professor Callout",
@@ -71,7 +72,7 @@ function EditComponent(props) {
     <div className="featured-professor-wrapper">
       <div className="professor-select-container">
         <select onChange={ e => props.setAttributes({profId: e.target.value})}>
-          <option value="Select a professor">Select a professor</option>
+          <option value="Select a professor">{__('Select a professor', 'featured-professor')}</option>
           {allProfs.map(prof => {
             return (
               <option value={prof.id} selected={props.attributes.profId == prof.id}> {prof.title.rendered} </option>
