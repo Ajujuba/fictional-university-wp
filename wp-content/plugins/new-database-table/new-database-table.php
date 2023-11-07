@@ -21,8 +21,42 @@ class PetAdoptionTablePlugin {
       array($this, 'onActivate') //fn that will be called when activating the plugin
     ); //This hook is executed 1x only when my plugin is activated 
     //add_action('admin_head', array($this, 'onAdminRefresh')); //run in Admin when I reaload the page to add my pets, if If call the function onAdminRefresh only 1 pet will be added, but if I run PopulatedFast many pets will be added
+    add_action('admin_post_createpet', array($this, 'createPet')); //Here I'm using the hook that I created in my template-pets.php
+    add_action('admin_post_nopriv_createpet', array($this, 'createPet')); //this 'nopriv' would allow the action to be accessible even to unauthenticated visitors
+    add_action('admin_post_deletepet', array($this, 'deletePet')); //Here I'm using the hook that I created in my template-pets.php
+    add_action('admin_post_nopriv_deletepet', array($this, 'deletePet')); //this 'nopriv' would allow the action to be accessible even to unauthenticated visitors
     add_action('wp_enqueue_scripts', array($this, 'loadAssets')); //run in my front
     add_filter('template_include', array($this, 'loadTemplate'), 99); //This is a hook that allows you to modify the page template used when loading a page in WordPress. It calls the loadTemplate() function and sets the priority to 99
+  }
+
+  #Add a new pet in DB
+  function createPet(){
+    if(current_user_can('administrator')){
+      $pet = generatePet(); //create my random pet
+      $pet['petname'] = sanitize_text_field($_POST['incomingpetname']); //change the name 
+      global $wpdb;
+
+      $wpdb->insert($this->tablename, $pet); //save in my DB
+
+      wp_safe_redirect(site_url('/index.php/pet-adoption')); //redirect to initial pet-adoption page after add pet
+    }else{
+      wp_safe_redirect(site_url()); //redirect to homepage if you aren't admin
+    }
+  }
+
+  #Delete a new pet in DB
+  function deletePet(){
+    if(current_user_can('administrator')){
+      $id = sanitize_text_field($_POST['idtodelete']); //get the id to delete 
+      global $wpdb;
+
+      $wpdb->delete($this->tablename, ['id' => $id]); //delete in my DB
+
+      wp_safe_redirect(site_url('/index.php/pet-adoption')); //redirect to initial pet-adoption page after delete pet
+    }else{
+      wp_safe_redirect(site_url()); //redirect to homepage if you aren't admin
+      exit();
+    }
   }
 
   function onActivate() {
