@@ -1,0 +1,112 @@
+.content-homepage{
+    display: flex;
+    justify-content: center;
+    margin: 40px 20px 10px 20px;
+}
+
+.row-homepage{
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.col-homepage{
+    width: 40%;
+    padding: 20px;
+    border-radius: 5px;
+    min-height: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    opacity: 95%;
+    transition: 500ms linear; 
+
+    &:hover {
+        transform: scale(1.1);
+    }
+
+}
+
+.col-left-homepage{
+    background-color: #FBEFCA;
+    color: #0D3B66;
+
+}
+
+.col-right-homepage{
+    background-color: #0D3B66;
+    color: #FBEFCA;
+
+}
+
+.title-card-homepage{
+    text-align: center;
+    font-family: "Roboto", sans-serif;
+    font-size: 27px;
+    font-weight: 400;
+    margin-bottom: 1.9rem;
+}
+
+.text-right-homepage{
+    color: white;
+}
+
+.text-left-homepage{
+    color: black;
+}
+
+.border-title-card-homepage {
+    border-bottom: 2px solid #0D3B66;
+    margin-top: 10px;
+}
+
+.border-title-card-right-homepage {
+    border-bottom: 2px solid #FBEFCA;
+    margin-top: 10px;
+}
+
+.content-card-homepage {
+    text-align: center;
+}
+
+.animation-btn-homepage:hover {
+    transform: none;
+}
+
+@include CardsMedium{
+    .content-homepage{
+        margin: 0px;
+    }
+
+    .row-homepage{
+        flex-direction: column;
+    }
+
+    .col-homepage{
+        width: 90%;
+        margin: 30px 0px;
+    }
+
+    .col-homepage:hover {
+        transform: none;
+    }
+
+    .animation-btn-homepage{
+        transition: 500ms linear; 
+    
+        &:hover {
+            transform: scale(1.1);
+        }
+    }
+}
+
+@include atGiant{
+    .col-homepage{
+        max-width: 610px;
+    }
+    .row-homepage{
+        justify-content: center;
+        gap: 100px;
+    }
+}
