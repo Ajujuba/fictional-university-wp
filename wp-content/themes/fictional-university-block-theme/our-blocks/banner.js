@@ -14,7 +14,7 @@ function EditComponent(){
             <div className="page-banner__bg-image" style={{backgroundImage: "url('http://localhost/fictional-university-wp/wp-content/themes/fictional-university-block-theme/images/library-hero.jpg')" }}></div>
             <div className="page-banner__content container t-center c-white">
                {/* <InnerBlocks allowedBlocks={["core/paragraph", "core/heading", "core/list"]} />  If We want allow only some core blocks we can set this like here */}
-               <InnerBlocks allowedBlocks={["ourblocktheme/genericheading"]} />
+               <InnerBlocks allowedBlocks={["ourblocktheme/genericheading", "ourblocktheme/genericbutton"]} />
             </div>
         </div>
     );

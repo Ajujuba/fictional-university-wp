@@ -1,0 +1,72 @@
+{
+    "version": 2,
+    "styles": {
+        "blocks": {
+            "core/button": {
+                "color": {
+                    "text" : "#FFFFFF",
+                    "background": "var(--wp--preset--color--primary)"
+                }
+            }
+        }
+    },
+    "settings": {
+        "typography": {
+            "fontFamilies": [],
+            "fontStyle": false,
+            "fontWeight": false,
+            "letterSpacing": false,
+            "textDecoration": false,
+            "lineHeight": false,
+            "textTransform": false,
+            "dropCap": false,
+            "customFontSize": false,
+            "fontSizes": []
+        },
+        "blocks": {
+            "core/button": {
+                "border": {
+                    "color": false,
+                    "style": false,
+                    "width": false
+                }
+            }
+        },
+        "color": {
+            "background": true,
+            "text": false,
+            "link": false,
+            "custom": false,
+            "defaultPalette": false,
+            "duotone": [],
+            "customDuotone": false,
+            "gradients": [],
+            "customGradient": false,
+            "palette": [
+                {
+                    "slug": "primary",
+                    "color": "#0D3B66",
+                    "name": "Primary Blue"
+                },
+                {
+                    "slug": "secondary",
+                    "color": "#EE964B",
+                    "name": "Secondary Orange"
+                },
+                {
+                    "slug": "background",
+                    "color": "#FFFFFFF",
+                    "name": "Background white"
+                },
+                {
+                    "slug": "foreground",
+                    "color": "#333333",
+                    "name": "Foreground darkgray"
+                }
+            ]
+        },
+        "layout": {
+            "contentSize": "840px"
+        }
+    }
+}
