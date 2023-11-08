@@ -1,24 +1,34 @@
+import {InnerBlocks} from "@wordpress/block-editor" //This module allows blocks inside other blocks
+
 wp.blocks.registerBlockType('ourblocktheme/banner', {
     title: "Banner",
     edit: EditComponent,
     save: SaveComponent
 });
 
+//This fn make my content editable in mt editor
 function EditComponent(){
     return (
         <div className="page-banner">
             {/* I needed use the full path to image, with relative path doesn't worked */}
             <div className="page-banner__bg-image" style={{backgroundImage: "url('http://localhost/fictional-university-wp/wp-content/themes/fictional-university-block-theme/images/library-hero.jpg')" }}></div>
             <div className="page-banner__content container t-center c-white">
-                <h1 className="headline headline--large">Welcome!</h1>
-                <h2 className="headline headline--medium">We think you&rsquo;ll like it here.</h2>
-                <h3 className="headline headline--small">Why don&rsquo;t you check out the <strong>major</strong> you&rsquo;re interested in?</h3>
-                <a href="#" className="btn btn--large btn--blue">Find Your Major</a>
+               {/* <InnerBlocks allowedBlocks={["core/paragraph", "core/heading", "core/list"]} />  If We want allow only some core blocks we can set this like here */}
+               <InnerBlocks allowedBlocks={["ourblocktheme/genericheading"]} />
             </div>
         </div>
-    )
+    );
 }
 
+// this function will save all blocks there are inside my Banner block to show in my frontend
 function SaveComponent(){
-    return <p>This is from our block</p>
+    return (
+        <div className="page-banner">
+            {/* I needed use the full path to image, with relative path doesn't worked */}
+            <div className="page-banner__bg-image" style={{backgroundImage: "url('http://localhost/fictional-university-wp/wp-content/themes/fictional-university-block-theme/images/library-hero.jpg')" }}></div>
+            <div className="page-banner__content container t-center c-white">
+                <InnerBlocks.Content />
+            </div>
+        </div>
+    );
 }

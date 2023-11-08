@@ -201,12 +201,20 @@ function ignoreCertainFiles($exclude_filters){
 }
 add_filter('ai1wm_exclude_themes_from_export', 'ignoreCertainFiles');
 
-#Fn to create my Banner Block in the Homepage
-function bannerBlock(){
-    #create my .js of my bannerblock
-    wp_register_script('bannerBlockScript', get_stylesheet_directory_uri() . '/build/banner.js', ['wp-blocks', 'wp-editor']);
-    register_block_type('ourblocktheme/banner', [
-        'editor_script' => 'bannerBlockScript'
-    ]);
+# class to add custom blocks
+class JSXBlock{
+    function __construct($name){
+        $this->name = $name;
+        add_action('init', [$this, 'onInit']);
+    }
+
+    function onInit(){
+        #create my .js of my bannerblock
+        wp_register_script($this->name, get_stylesheet_directory_uri() . "/build/{$this->name}.js", ['wp-blocks', 'wp-editor']);
+        register_block_type("ourblocktheme/{$this->name}", [
+            'editor_script' => $this->name
+        ]);
+    }
 }
-add_action('init', 'bannerBlock');
+new JSXBlock('banner');
+new JSXBlock('genericheading');
