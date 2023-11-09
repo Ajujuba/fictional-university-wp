@@ -203,19 +203,44 @@ add_filter('ai1wm_exclude_themes_from_export', 'ignoreCertainFiles');
 
 # class to add custom blocks
 class JSXBlock{
-    function __construct($name){
+    function __construct(
+        $name, 
+        $renderCallback = null //set to null so the parameter is optional 
+    ){
         $this->name = $name;
+        $this->renderCallback = $renderCallback;
         add_action('init', [$this, 'onInit']);
+    }
+
+    //define our callback
+    function ourRenderCallback(
+        $attributes, //When WP call this fn, he will send to function any attributes from my block
+        $content //In addition to the attributes we want the content because inside our block there are other nested blocks, so we have to highlight the content
+    ){
+        ob_start();
+
+        //call a file with my HTML 
+        require get_theme_file_path("/our-blocks/{$this->name}.php");
+
+        return ob_get_clean();
     }
 
     function onInit(){
         #create my .js of my bannerblock
         wp_register_script($this->name, get_stylesheet_directory_uri() . "/build/{$this->name}.js", ['wp-blocks', 'wp-editor']);
-        register_block_type("ourblocktheme/{$this->name}", [
-            'editor_script' => $this->name
-        ]);
+        
+        $ourArgs = [
+            'editor_script' => $this->name //The name of this property is a WP oficial, so needs to be exactly 'editor_script'
+        ];
+
+        //Check if my property renderCallback is equals true
+        if($this->renderCallback){
+            //We'll call a function to set my render_callback. and the name of my property needs be exactly render_callback  is a WP official name
+            $ourArgs['render_callback'] = [$this, 'ourRenderCallback'];
+       }
+        register_block_type("ourblocktheme/{$this->name}", $ourArgs);
     }
 }
-new JSXBlock('banner');
-new JSXBlock('genericheading');
-new JSXBlock('genericbutton');
+new JSXBlock('banner', true); //the optional 'true' indicate that we'll use PHP render callback
+new JSXBlock('genericheading', true);
+new JSXBlock('genericbutton', true);

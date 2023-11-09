@@ -35,19 +35,7 @@ function EditComponent(props){
 
 // this function will save all blocks there are inside my Banner block
 function SaveComponent(props){
-    //returns the HTML tag based on the value of the size attribute
-    function createTagName(){
-        switch(props.attributes.size){
-            case "large":
-                return "h1"
-            case "medium":
-                return "h2"
-            case "small":
-                return "h3"
-        }
-    }
-    //RichText.Content is used to render header text in saved content. It receives the HTML tag returned by the createTagName function and the value of the text attribute.
-    return <RichText.Content tagName={createTagName()} value={props.attributes.text} className={`headline headline--${props.attributes.size}`}  /> 
+    return null
 }
 
 // --------------- NOTE:

@@ -84,6 +84,5 @@ function EditComponent(props){
 
 // this function will save all blocks there are inside my Banner block
 function SaveComponent(props){
-    //RichText.Content is used to render header text in saved content. It receives the HTML tag returned by the createTagName function and the value of the text attribute.
-    return <a href={props.attributes.linkObject.url} className={`btn btn--${props.attributes.size} btn--${props.attributes.colorName} `}>{props.attributes.text}</a> 
+    return null
 }
