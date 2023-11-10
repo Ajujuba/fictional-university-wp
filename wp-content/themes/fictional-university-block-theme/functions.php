@@ -205,7 +205,6 @@ add_filter('ai1wm_exclude_themes_from_export', 'ignoreCertainFiles');
 class PlaceholderBlock{
     function __construct($name){
         $this->name = $name;
-
         add_action('init', [$this, 'onInit']);
     }
 
@@ -215,7 +214,6 @@ class PlaceholderBlock{
         $content //In addition to the attributes we want the content because inside our block there are other nested blocks, so we have to highlight the content
     ){
         ob_start();
-            //call a file with my HTML an variable with the content of my param $data
             require get_theme_file_path("/our-blocks/{$this->name}.php");
         return ob_get_clean();
     }
@@ -284,3 +282,5 @@ class JSXBlock{
 new JSXBlock('banner', true, ['fallbackimage' => get_theme_file_uri('/images/library-hero.jpg')]); //the optional 'true' indicate that we'll use PHP render callback, the 3 param will give to my banner.js an path to default image, because without this, when I create a new block in admin, my background is null
 new JSXBlock('genericheading', true);
 new JSXBlock('genericbutton', true);
+new JSXBlock('slideshow', true); //it's my slide parent
+new JSXBlock('slide', true); // will appears inside my slideshow
