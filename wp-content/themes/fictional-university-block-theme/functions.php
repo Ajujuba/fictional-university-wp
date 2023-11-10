@@ -205,10 +205,12 @@ add_filter('ai1wm_exclude_themes_from_export', 'ignoreCertainFiles');
 class JSXBlock{
     function __construct(
         $name, 
-        $renderCallback = null //set to null so the parameter is optional 
+        $renderCallback = null,//set to null so the parameter is optional 
+        $data = null //set to null so the parameter is optional 
     ){
         $this->name = $name;
         $this->renderCallback = $renderCallback;
+        $this->data = $data;
         add_action('init', [$this, 'onInit']);
     }
 
@@ -219,7 +221,7 @@ class JSXBlock{
     ){
         ob_start();
 
-        //call a file with my HTML 
+        //call a file with my HTML an variable with the content of my param $data
         require get_theme_file_path("/our-blocks/{$this->name}.php");
 
         return ob_get_clean();
@@ -229,6 +231,11 @@ class JSXBlock{
         #create my .js of my bannerblock
         wp_register_script($this->name, get_stylesheet_directory_uri() . "/build/{$this->name}.js", ['wp-blocks', 'wp-editor']);
         
+        //this will send in my page an 
+        if($this->data){
+            wp_localize_script($this->name, $this->name, $this->data);
+        }
+
         $ourArgs = [
             'editor_script' => $this->name //The name of this property is a WP oficial, so needs to be exactly 'editor_script'
         ];
@@ -241,6 +248,6 @@ class JSXBlock{
         register_block_type("ourblocktheme/{$this->name}", $ourArgs);
     }
 }
-new JSXBlock('banner', true); //the optional 'true' indicate that we'll use PHP render callback
+new JSXBlock('banner', true, ['fallbackimage' => get_theme_file_uri('/images/library-hero.jpg')]); //the optional 'true' indicate that we'll use PHP render callback, the 3 param will give to my banner.js an path to default image, because without this, when I create a new block in admin, my background is null
 new JSXBlock('genericheading', true);
 new JSXBlock('genericbutton', true);
