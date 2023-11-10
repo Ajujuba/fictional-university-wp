@@ -201,7 +201,40 @@ function ignoreCertainFiles($exclude_filters){
 }
 add_filter('ai1wm_exclude_themes_from_export', 'ignoreCertainFiles');
 
-# class to add custom blocks
+#Add custom blocks without JSX, things more statics
+class PlaceholderBlock{
+    function __construct($name){
+        $this->name = $name;
+
+        add_action('init', [$this, 'onInit']);
+    }
+
+    //define our callback
+    function ourRenderCallback(
+        $attributes, //When WP call this fn, he will send to function any attributes from my block
+        $content //In addition to the attributes we want the content because inside our block there are other nested blocks, so we have to highlight the content
+    ){
+        ob_start();
+            //call a file with my HTML an variable with the content of my param $data
+            require get_theme_file_path("/our-blocks/{$this->name}.php");
+        return ob_get_clean();
+    }
+
+    function onInit(){
+        wp_register_script($this->name, get_stylesheet_directory_uri() . "/our-blocks/{$this->name}.js", ['wp-blocks', 'wp-editor']);
+
+        register_block_type("ourblocktheme/{$this->name}", [
+            'editor_script' => $this->name, //The name of this property is a WP oficial, so needs to be exactly 'editor_script'
+            'render_callback' => [$this, 'ourRenderCallback']
+        ]);
+    }
+}
+new PlaceholderBlock('eventsandblogs');
+new PlaceholderBlock('header');
+new PlaceholderBlock('footer');
+
+
+# class to add custom blocks with JSX
 class JSXBlock{
     function __construct(
         $name, 
