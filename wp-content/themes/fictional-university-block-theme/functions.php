@@ -230,7 +230,7 @@ class PlaceholderBlock{
 new PlaceholderBlock('eventsandblogs');
 new PlaceholderBlock('header');
 new PlaceholderBlock('footer');
-
+new PlaceholderBlock('blocknumbers');
 
 # class to add custom blocks with JSX
 class JSXBlock{
