@@ -232,6 +232,9 @@ new PlaceholderBlock('header');
 new PlaceholderBlock('footer');
 new PlaceholderBlock('blocknumbers');
 new PlaceholderBlock('blockboxes');
+new PlaceholderBlock('singlepost');
+new PlaceholderBlock('singlepage');
+new PlaceholderBlock('blogindex');
 
 # class to add custom blocks with JSX
 class JSXBlock{
@@ -284,4 +287,4 @@ new JSXBlock('banner', true, ['fallbackimage' => get_theme_file_uri('/images/lib
 new JSXBlock('genericheading', true);
 new JSXBlock('genericbutton', true);
 new JSXBlock('slideshow', true); //it's my slide parent
-new JSXBlock('slide', true); // will appears inside my slideshow
+new JSXBlock('slide', true, ['themeimagepath' => get_theme_file_uri('/images/') ]); // will appears inside my slideshow. I'm send the 3 param to my .js can see the currently theme value, so I'll define my images using a global path, that will work in all cases/configurations, even the user install WP in/out of root domain 

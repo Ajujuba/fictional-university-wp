@@ -9,6 +9,7 @@ wp.blocks.registerBlockType('ourblocktheme/slide', {
         align: ["full"]
     },
     attributes: {
+        themeimage: {type: "string"},
         align: {type: "string", default: "full"},
         imgID: {type: "number"},
         imgURL: {type: "string", default: window.banner.fallbackimage} // I'm getting this param that my PHP sent
@@ -20,6 +21,12 @@ wp.blocks.registerBlockType('ourblocktheme/slide', {
 //This fn make my content editable in mt editor
 function EditComponent(props){
 
+    useEffect(function(){
+        if(props.attributes.themeimage){
+            props.setAttributes({imgURL: `${slide.themeimagepath}${props.attributes.themeimage}`})
+        }
+    }, [])
+
     useEffect(function(){ // hook to fetch the image URL when the imgID attribute changes.
         if(props.attributes.imgID){
             async function go(){
@@ -27,7 +34,7 @@ function EditComponent(props){
                     path: `/wp/v2/media/${props.attributes.imgID}`,
                     method: 'GET'
                 })
-                props.setAttributes({imgURL: response.media_details.sizes.pageBanner.source_url}) //attribute is then updated with the URL of the selected image, so I can use this in my PHP
+                props.setAttributes({ themeimage: "" , imgURL: response.media_details.sizes.pageBanner.source_url}) //attribute is then updated with the URL of the selected image, so I can use this in my PHP
             }
             go()
         }
