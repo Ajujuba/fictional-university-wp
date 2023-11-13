@@ -235,6 +235,15 @@ new PlaceholderBlock('blockboxes');
 new PlaceholderBlock('singlepost');
 new PlaceholderBlock('singlepage');
 new PlaceholderBlock('blogindex');
+new PlaceholderBlock('programarchive');
+new PlaceholderBlock('singleprogram');
+new PlaceholderBlock('singleprofessor');
+new PlaceholderBlock('mynotes');
+new PlaceholderBlock('eventarchive');
+new PlaceholderBlock('singleevent');
+new PlaceholderBlock('pastevents');
+new PlaceholderBlock('campusarchive');
+new PlaceholderBlock('singlecampus');
 
 # class to add custom blocks with JSX
 class JSXBlock{
