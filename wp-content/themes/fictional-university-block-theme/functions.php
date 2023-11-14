@@ -297,3 +297,24 @@ new JSXBlock('genericheading', true);
 new JSXBlock('genericbutton', true);
 new JSXBlock('slideshow', true); //it's my slide parent
 new JSXBlock('slide', true, ['themeimagepath' => get_theme_file_uri('/images/') ]); // will appears inside my slideshow. I'm send the 3 param to my .js can see the currently theme value, so I'll define my images using a global path, that will work in all cases/configurations, even the user install WP in/out of root domain 
+
+#this function manage which blocks you can use within your page or within full site editor
+function myallowedblocks($allowed_block_types, $editor_context){
+    return $allowed_block_types; //You can use all blocks
+    #-----------------EXAMPLES:
+    //return ["ourblocktheme/header", "ourblocktheme/footer"]; //return that you can use only this blocks in all environments
+    // if(!empty($editor_context->post)){ 
+    //     return $allowed_block_types; // if I'm working with a post/page editor screen, I can use all block types
+    // }
+    //return ["ourblocktheme/header", "ourblocktheme/footer", "core/paragraph"]; //if I am on the Full Site Editor (FSE) screen
+    
+    // if(!empty($editor_context->post->post_type == 'professor')){ 
+    //     #... your condition
+    // }
+}
+add_filter(
+    'allowed_block_types_all', //name of WP filter hook
+    'myallowedblocks', //your function
+    10, //priority
+    2 //the numbers of arguments the function will use
+);
