@@ -1,5 +1,12 @@
 <?php
 
+#This function with this hook will return all our querys and We can add new parameters to WP listen
+function universityQueryVars($vars){
+    $vars[] = 'skyColor'; //example how register my query var
+    return $vars;
+}
+add_filter('query_vars', 'universityQueryVars');
+
 #Here I'm including my Custom REST API for searching my custom posts type
 require get_theme_file_path('/inc/search-route.php');
 
@@ -244,6 +251,8 @@ new PlaceholderBlock('singleevent');
 new PlaceholderBlock('pastevents');
 new PlaceholderBlock('campusarchive');
 new PlaceholderBlock('singlecampus');
+new PlaceholderBlock("search");
+new PlaceholderBlock("searchresults");
 
 # class to add custom blocks with JSX
 class JSXBlock{

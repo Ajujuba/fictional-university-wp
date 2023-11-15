@@ -42,7 +42,13 @@ while (have_posts()) {
         <?php endif ?>
 
         <div class="generic-content">
-            <?php the_content(); ?>
+            <?php 
+                the_content(); 
+                $skyColorvalue = sanitize_text_field(get_query_var('skyColor'));
+                if($skyColorvalue == 'blue'){
+                    echo 'hi guys, the life is beautiful!';
+                }
+            ?>
         </div>
 
     </div>
