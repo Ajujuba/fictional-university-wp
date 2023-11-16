@@ -1,0 +1,102 @@
+.map-container {
+    position: relative;
+    display: flex;
+}
+
+#map {
+    height: 500px;
+    flex: 1;  
+}
+
+#map-list {
+    position: absolute;
+    top: 0;
+    left: 0;    /* Show my cards in left */
+    width: 300px;
+    z-index: 999;
+    padding: 20px;
+    overflow: scroll;
+    max-height: 700px;
+}
+
+.map-list {
+    list-style: none;
+    padding: 0;
+}
+
+.map-list-item {
+    margin-bottom: 10px;
+    background-color: #fff;    /* card background */
+    border: 1px solid #ddd;    /* border of my card */
+    border-radius: 5px;    
+    padding: 10px;    
+    min-height: 110px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.map-list-item a {
+    text-decoration: none;
+    color: #333;    /* text card */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.map-list-item.highlighted {
+    background-color: #FBEFCA; 
+    color: #ffffff;
+}
+
+.leaflet-top.leaflet-left {
+    display: none;
+}
+
+a.btn-map {
+    background-color: #F95738;
+    color: white;
+}
+
+.map-list-item .btn-map:hover {
+    background-color: #ea6e55;
+}
+
+/* Customize cluster colors */
+.marker-cluster-medium {
+    background-color: rgba(25, 120, 140, 0.6);
+}
+
+.marker-cluster-medium div {
+    background-color: #0D3B66; // background cluster
+}
+
+.marker-cluster-small {
+    background-color: rgba(25, 120, 140, 0.6); //border cluster
+}
+
+.marker-cluster-small div {
+    background-color: #0D3B66; //background cluster
+}
+
+/* Personalize markers color */
+img.leaflet-marker-icon {
+    filter: brightness(0) saturate(100%) invert(16%) sepia(93%) saturate(742%) hue-rotate(174deg) brightness(101%) contrast(97%);
+}
+
+.marker-cluster span {
+    color: white;
+    font-weight: 600;
+}
+
+/* Visibily for Webkit-based browsers (Chrome, Safari and Opera) */
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
+
+/* Visibily for IE, Edge and Firefox */
+.scrollbar-hide {
+    -ms-overflow-style: none;    /* IE and Edge */
+    scrollbar-width: none;    /* Firefox */
+}

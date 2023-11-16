@@ -1712,123 +1712,107 @@ body.admin-bar .search-overlay {
     gap: 100px;
   }
 }
-.row-perso {
-  margin-top: 50px;
-  margin-right: 10%;
-  padding: 0;
-  font-family: Arial, sans-serif;
-  display: flex;
-  justify-content: space-between;
-  height: 500px;
-  background-color: #ffffff;
+.map-container {
   position: relative;
-}
-
-.left-column {
-  width: 100%;
   display: flex;
-  flex-direction: column;
-  border-right: 2px solid #1C456E;
-  padding-right: 20px;
-  border-top: 2px solid #1C456E;
-  border-bottom: 2px solid #1C456E;
-  z-index: 2;
 }
 
-.left-top {
+#map {
+  height: 500px;
   flex: 1;
-  display: flex;
 }
 
-.left-bottom {
-  flex: 1;
-  display: flex;
-  margin-top: 10px;
-}
-
-.square {
-  flex: 1;
-  margin: 5px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 20px;
-  flex-direction: column;
-}
-
-.right-column {
-  width: 50%;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  font-size: 24px;
-  font-weight: bold;
-}
-
-.number {
-  background-color: #FAF0CD;
-  color: #1C456E;
-  font-size: 40px;
-  padding: 10px;
-  font-weight: bold;
-}
-
-.subtitle-number {
-  color: #0a2026;
-  font-family: "Bitter", sans-serif;
-  padding-top: 10px;
-  text-align: center;
-}
-
-.box-text {
-  background-color: #FAF0CD;
-  width: 45%;
-  min-height: 200px;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
+#map-list {
   position: absolute;
-  z-index: 1;
+  top: 0;
+  left: 0; /* Show my cards in left */
+  width: 300px;
+  z-index: 999;
+  padding: 20px;
+  overflow: scroll;
+  max-height: 700px;
 }
 
-.col-text {
-  width: 100%;
-  color: #1C456E;
-  font-size: 1.625rem;
-  font-weight: 700;
+.map-list {
+  list-style: none;
+  padding: 0;
+}
+
+.map-list-item {
+  margin-bottom: 10px;
+  background-color: #fff; /* card background */
+  border: 1px solid #ddd; /* border of my card */
+  border-radius: 5px;
+  padding: 10px;
+  min-height: 110px;
   display: flex;
-  flex-wrap: wrap;
-  align-content: center;
-  font-family: "Bitter", sans-serif;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.map-list-item a {
+  text-decoration: none;
+  color: #333; /* text card */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
 }
 
-@media screen and (max-width: 64em) {
-  .square {
-    font-size: 18px;
-  }
-  .number {
-    font-size: 30px;
-  }
-  .right-column {
-    width: 100%;
-    flex-wrap: wrap;
-    flex-direction: column;
-    order: 1;
-    margin-bottom: 88px;
-  }
-  .left-column {
-    order: 2;
-  }
-  .box-text {
-    width: 100%;
-    min-height: 130px;
-  }
-  .row-perso {
-    margin: 30px 0 20px;
-    height: 420px;
-    flex-wrap: wrap;
-  }
+.map-list-item.highlighted {
+  background-color: #FBEFCA;
+  color: #ffffff;
+}
+
+.leaflet-top.leaflet-left {
+  display: none;
+}
+
+a.btn-map {
+  background-color: #F95738;
+  color: white;
+}
+
+.map-list-item .btn-map:hover {
+  background-color: #ea6e55;
+}
+
+/* Customize cluster colors */
+.marker-cluster-medium {
+  background-color: rgba(25, 120, 140, 0.6);
+}
+
+.marker-cluster-medium div {
+  background-color: #0D3B66;
+}
+
+.marker-cluster-small {
+  background-color: rgba(25, 120, 140, 0.6);
+}
+
+.marker-cluster-small div {
+  background-color: #0D3B66;
+}
+
+/* Personalize markers color */
+img.leaflet-marker-icon {
+  filter: brightness(0) saturate(100%) invert(16%) sepia(93%) saturate(742%) hue-rotate(174deg) brightness(101%) contrast(97%);
+}
+
+.marker-cluster span {
+  color: white;
+  font-weight: 600;
+}
+
+/* Visibily for Webkit-based browsers (Chrome, Safari and Opera) */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Visibily for IE, Edge and Firefox */
+.scrollbar-hide {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }
 
 /*# sourceMappingURL=style-index.css.map*/
