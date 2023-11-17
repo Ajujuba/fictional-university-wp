@@ -5,7 +5,7 @@ class Locator{
     constructor(){
         this.dataMarkerId = null
         this.clickPinToMarkCard = null
-        this.map = L.map('map').setView([41.862680437343776, 12.477422940752222], 4);
+        this.map = L.map('map').setView([41.862680437343776, 12.477422940752222], 4); //defines where my map open 
         this.load()
         this.events()
     }
@@ -78,15 +78,6 @@ class Locator{
     
                 this.map.setView([lat, lon], 13); // Focus on the marker point
             });
-
-            // setTimeout(() => {
-            //     cardContainer.on('click', () => {
-            //         if (cardContainer) {
-            //             cardContainer.classList.add('highlighted');
-            //             this.dataMarkerId = id
-            //         }
-            //     })
-            // }, 300) //delay the call for cardContainer to be loaded
 
             markerCoordinates.push([lat, lon]); // Add the marker coordinates to the array
 

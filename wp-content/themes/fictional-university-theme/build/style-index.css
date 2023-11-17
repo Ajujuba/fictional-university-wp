@@ -1743,10 +1743,9 @@ body.admin-bar .search-overlay {
   background-color: #fff; /* card background */
   border: 1px solid #ddd; /* border of my card */
   border-radius: 5px;
-  padding: 10px;
   min-height: 110px;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   flex-direction: column;
 }
 
@@ -1764,6 +1763,14 @@ body.admin-bar .search-overlay {
   color: #ffffff;
 }
 
+.card-map {
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+
 .leaflet-top.leaflet-left {
   display: none;
 }
@@ -1771,6 +1778,7 @@ body.admin-bar .search-overlay {
 a.btn-map {
   background-color: #F95738;
   color: white;
+  min-height: 40px;
 }
 
 .map-list-item .btn-map:hover {
