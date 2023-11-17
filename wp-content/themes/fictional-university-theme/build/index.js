@@ -172,32 +172,29 @@ __webpack_require__.r(__webpack_exports__);
 
 class Locator {
   constructor() {
-    this.test = null;
+    this.dataMarkerId = null;
+    this.clickPinToMarkCard = null;
+    this.map = L.map('map').setView([41.862680437343776, 12.477422940752222], 4);
     this.load();
     this.events();
   }
   events() {
     jquery__WEBPACK_IMPORTED_MODULE_0___default()("#map").on("click", '.test-ana', this.onMapClick);
-    // this.map.on('zoomend', () => this.updateVisibleMarkers());
-    // this.map.on('moveend', () => this.updateVisibleMarkers());
     let moveMapTimeout;
     this.map.on('moveend', () => {
       clearTimeout(moveMapTimeout);
       moveMapTimeout = setTimeout(() => {
         this.updateVisibleMarkers();
-      }, 200); // Ajuste o tempo conforme necessário
+      }, 100);
     });
-
     this.map.on('zoomend', () => {
       clearTimeout(moveMapTimeout);
       moveMapTimeout = setTimeout(() => {
         this.updateVisibleMarkers();
-      }, 200); // Ajuste o tempo conforme necessário
+      }, 100);
     });
   }
-
   load() {
-    this.map = L.map('map').setView([41.862680437343776, 12.477422940752222], 4);
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(this.map);
@@ -213,8 +210,6 @@ class Locator {
 
     var markers = L.markerClusterGroup(); // Create the marker cluster
 
-    let highlightedMarker = null;
-
     // Iterate over locations and create markers for each one
     locations.forEach(location => {
       const {
@@ -224,46 +219,51 @@ class Locator {
         id,
         link
       } = location;
-      const marker = L.marker([lat, lon]).bindPopup(title);
+      const marker = L.marker([lat, lon], {
+        id: id
+      }).bindPopup(title);
+      const cardContainer = document.querySelector('.card-container');
 
       // Add a click event to the marker to highlight the card and focus on the point
       marker.on('click', () => {
-        //Highlight the corresponding card
-        // const listItem = document.querySelector(`[data-marker-id="${id}"]`);
-        // if (listItem) {
-        //     listItem.classList.add('highlighted');
-        //     highlightedMarker = listItem;
-        //     this.test = id
-        // }
-
-        const cardContainer = document.querySelector('.card-container');
         if (cardContainer) {
           cardContainer.classList.add('highlighted');
-          this.test = id;
+          this.clickPinToMarkCard = id;
         }
 
         // Scroll to the corresponding card
-        listItem.scrollIntoView({
-          behavior: 'smooth',
-          block: 'start'
-        });
+        if (window.innerWidth > 1024) {
+          mapList.scrollTo({
+            top: cardContainer.offsetTop - 12,
+            behavior: 'smooth'
+          });
+        } else {
+          mapList.scrollTo({
+            left: cardContainer.offsetLeft - 12,
+            behavior: 'smooth'
+          });
+        }
         this.map.setView([lat, lon], 13); // Focus on the marker point
       });
+
+      // setTimeout(() => {
+      //     cardContainer.on('click', () => {
+      //         if (cardContainer) {
+      //             cardContainer.classList.add('highlighted');
+      //             this.dataMarkerId = id
+      //         }
+      //     })
+      // }, 300) //delay the call for cardContainer to be loaded
 
       markerCoordinates.push([lat, lon]); // Add the marker coordinates to the array
 
       markers.addLayer(marker); // Add markers to the cluster
 
-      const listItem = this.createCard(id, lat, lon, title, link, this.test); // Add bookmarks to the list
+      const listItem = this.createCard(id, lat, lon, title, link, this.clickPinToMarkCard); // Add bookmarks to the list
 
       mapList.appendChild(listItem);
     });
     this.map.addLayer(markers); // Add the cluster to the map
-
-    // Calculate the length (bounds) of markers
-    //const markerBounds = L.latLngBounds(markerCoordinates);
-    // Adjust the map view to include the extent of markers
-    //map.fitBounds(markerBounds);   // By commenting on this line, the initial centering of the map is the way I want it to be shown to the landmarks  
   }
 
   //Updates my list to only show cards corresponding to my markers on the screen at the current time
@@ -273,8 +273,8 @@ class Locator {
     const mapList = document.querySelector('#map-list');
     mapList.innerHTML = ''; // clean my list
 
+    // Add a message with local not found
     if (visibleLocations.length === 0) {
-      // Add a message with local not found
       const listItem = document.createElement('li');
       listItem.classList.add('map-list-item');
       const html = `
@@ -296,43 +296,60 @@ class Locator {
         id,
         link
       } = location;
-      const listItem = this.createCard(id, lat, lon, title, link, this.test);
+      const listItem = this.createCard(id, lat, lon, title, link, this.clickPinToMarkCard);
       mapList.appendChild(listItem);
     });
-
-    //console.log('Locations visíveis:', visibleLocations);
   }
-
   onMapClick(e) {
     popup.setLatLng(e.latlng).setContent("You clicked the map at " + e.latlng.toString()).openOn(this.map);
   }
-  createCard(id, lat, lon, title, link, test) {
-    console.log(test);
+  createCard(id, lat, lon, title, link, clickPinToMarkCard) {
     const cardContainer = document.createElement('div');
     cardContainer.classList.add('card-container');
     const listItem = document.createElement('li');
     listItem.classList.add('map-list-item');
 
-    //Highlight the corresponding card
-    if (test == id) {
-      listItem.classList.add('highlighted');
-      this.test = 0; // this line makes my map lost the highlighted if use move or zoom
-    }
+    // Add an event when click in the card
+    listItem.addEventListener('click', e => {
+      this.dataMarkerId = jquery__WEBPACK_IMPORTED_MODULE_0___default()(listItem).data('marker-id');
 
+      // Find the card and add highlight
+      const marker = this.findMarkerById(id);
+      if (this.dataMarkerId == id) {
+        listItem.classList.add('highlighted');
+      }
+      if (marker) {
+        this.map.setView([lat, lon], 13); // Zoom in the marker corresponding
+      }
+
+      e.stopPropagation(); // Prevent click propagation to avoid conflicts with the map
+    });
+
+    //Highlight the corresponding card
+    if (clickPinToMarkCard == id || this.dataMarkerId == id) {
+      listItem.classList.add('highlighted');
+      this.clickPinToMarkCard = 0; // this line makes my map lost the highlighted if use move or zoom
+      this.dataMarkerId = null;
+    }
     listItem.setAttribute('data-marker-id', id);
     const html = `
-            <a class="card-map" href="${link}" title="${title}">
+            <div class="card-map">
                 <span class="stars">§</span>
                 <span class="h5 title">${title}</span>
                 <span class="text14">DESCRIPTION HERE</span>
-            </a>
+            </div>
             <a href="https://www.google.com" class="btn-map">
-                <span>Test</span>
+                <span>Test button</span>
             </a>
         `;
     listItem.innerHTML = html;
     cardContainer.appendChild(listItem);
     return cardContainer;
+  }
+  findMarkerById(id) {
+    let foundMarker = null;
+    foundMarker = document.querySelector(`[data-marker-id="${id}"]`);
+    return foundMarker;
   }
 }
 /* harmony default export */ __webpack_exports__["default"] = (Locator);
