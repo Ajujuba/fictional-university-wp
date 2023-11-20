@@ -201,3 +201,87 @@ function ignoreCertainFiles($exclude_filters){
     return $exclude_filters;
 }
 add_filter('ai1wm_exclude_themes_from_export', 'ignoreCertainFiles');
+
+function custom_event_filter_shortcode() {
+    ob_start();
+    $today = date('Ymd');
+
+    $filter = isset($_POST['filterCheck']) ? sanitize_text_field($_POST['filterCheck']) : 'venir';
+    $page = isset($_POST['page']) ? intval($_POST['page']) : 1; // Página atual
+
+    $args = array(
+        'post_type' => 'post',
+        'meta_key' => 'event_date_inicio',
+        'orderby' => 'meta_value_num',
+        'order' => 'ASC',
+        'posts_per_page' => 3,
+        'paged' => $page,
+    );
+
+    if ($filter === 'venir') {
+        $args['meta_query'] = array(
+            array(
+                'key' => 'event_date_inicio',
+                'compare' => '>=',
+                'value' => $today,
+                'type' => 'numeric'
+            )
+        );
+    } elseif ($filter === 'passe') {
+        $args['meta_query'] = array(
+            array(
+                'key' => 'event_date_inicio',
+                'compare' => '<',
+                'value' => $today,
+                'type' => 'numeric'
+            )
+        );
+    }
+
+    $query = new WP_Query($args);
+
+    if ($query->have_posts()) {
+        echo '<div class="row row-cols-1 row-cols-md-3">'; // Inicia a div de linhas do Bootstrap
+        $count = 0; // Inicia a contagem de cards por linha
+        while ($query->have_posts()) : $query->the_post();
+            get_template_part('template-parts/content', 'card', array('filter' => $filter));
+            $count++;
+            // Se atingiu 3 cards, fecha a linha atual e inicia uma nova
+            if ($count % 3 === 0) {
+                echo '</div><div class="row row-cols-1 row-cols-md-3">';
+            }
+        endwhile;
+        echo '</div>'; // Fecha a última linha
+
+		echo '<div class="pagination">';
+        // Adiciona um botão "Carregar Mais" para a próxima página, se houver mais páginas
+        $next_page = $page + 1;
+        $max_pages = $query->max_num_pages;
+
+        // Adiciona um botão "Voltar" para a página anterior, se não estiver na primeira página
+		$prev_page = $page - 1;
+		echo '<div class="load-prev-button" data-prev-page="' . $prev_page . '"> &larr; </div>';
+
+		// Adiciona botões numerados para todas as páginas
+		for ($i = 1; $i <= $max_pages; $i++) {
+			echo '<div class="pagination-buttons page-button" data-page="' . $i . '"> ' . $i . '</div>';
+		}
+
+        echo '<div class="load-more-button" data-next-page="' . $next_page . '"> &rarr; </div>';
+		echo '</div>';
+
+        wp_reset_postdata();
+    }else {
+        echo '<div class="row row-cols-1 row-cols-md-3">';
+        echo 'Events not found.';
+        echo '</div>';
+
+    }
+
+    $content = ob_get_clean();
+    echo $content;
+    exit;
+}
+
+add_action('wp_ajax_custom_event_filter', 'custom_event_filter_shortcode');
+add_action('wp_ajax_nopriv_custom_event_filter', 'custom_event_filter_shortcode');
