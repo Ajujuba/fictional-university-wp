@@ -202,12 +202,27 @@ function ignoreCertainFiles($exclude_filters){
 }
 add_filter('ai1wm_exclude_themes_from_export', 'ignoreCertainFiles');
 
+#register my script to use in Events card
+function enqueue_custom_script_events() {
+    wp_enqueue_script('custom-script', get_template_directory_uri() . '/assets/js/custom-script.js', array(), null, true);
+
+	// Define the data you want to send to your JS script
+    $script_data = array(
+        'admin_ajax_url' => esc_url(admin_url('admin-ajax.php')),
+    );
+
+    // Finds the script and sends the data
+    wp_localize_script('custom-script', 'customScriptData', $script_data);
+}
+add_action('wp_enqueue_scripts', 'enqueue_custom_script_events');
+
+#Search my events filtered for cards
 function custom_event_filter_shortcode() {
     ob_start();
     $today = date('Ymd');
 
-    $filter = isset($_POST['filterCheck']) ? sanitize_text_field($_POST['filterCheck']) : 'venir';
-    $page = isset($_POST['page']) ? intval($_POST['page']) : 1; // Página atual
+    $filter = isset($_POST['filterCheck']) ? sanitize_text_field($_POST['filterCheck']) : 'venir'; // Current filter
+    $page = isset($_POST['page']) ? intval($_POST['page']) : 1; // Current Page
 
     $args = array(
         'post_type' => 'post',
@@ -241,44 +256,42 @@ function custom_event_filter_shortcode() {
     $query = new WP_Query($args);
 
     if ($query->have_posts()) {
-        echo '<div class="row row-cols-1 row-cols-md-3">'; // Inicia a div de linhas do Bootstrap
-        $count = 0; // Inicia a contagem de cards por linha
+        echo '<div class="row row-cols-1 row-cols-md-3">'; // Start Bootstrap row div
+        $count = 0; // Start counting cards per line
         while ($query->have_posts()) : $query->the_post();
             get_template_part('template-parts/content', 'card', array('filter' => $filter));
             $count++;
-            // Se atingiu 3 cards, fecha a linha atual e inicia uma nova
+            // If you reach 3 cards, close the current line and start a new one
             if ($count % 3 === 0) {
                 echo '</div><div class="row row-cols-1 row-cols-md-3">';
             }
         endwhile;
-        echo '</div>'; // Fecha a última linha
+        echo '</div>'; // Close the last line
 
 		echo '<div class="pagination">';
-        // Adiciona um botão "Carregar Mais" para a próxima página, se houver mais páginas
-        $next_page = $page + 1;
+
         $max_pages = $query->max_num_pages;
 
-        // Adiciona um botão "Voltar" para a página anterior, se não estiver na primeira página
+        // Add a button to the previous page
 		$prev_page = $page - 1;
 		echo '<div class="load-prev-button" data-prev-page="' . $prev_page . '"> &larr; </div>';
 
-		// Adiciona botões numerados para todas as páginas
+		// Add numbered buttons to all pages
 		for ($i = 1; $i <= $max_pages; $i++) {
 			echo '<div class="pagination-buttons page-button" data-page="' . $i . '"> ' . $i . '</div>';
 		}
 
+        // Add a button for the next page
+        $next_page = $page + 1;
         echo '<div class="load-more-button" data-next-page="' . $next_page . '"> &rarr; </div>';
 		echo '</div>';
 
         wp_reset_postdata();
     }else {
-        echo '<div class="row row-cols-1 row-cols-md-3">';
         echo 'Events not found.';
-        echo '</div>';
-
     }
 
-    $content = ob_get_clean();
+	$content = ob_get_clean();
     echo $content;
     exit;
 }

@@ -59,6 +59,7 @@
         border: 1px solid #ddd;
         text-decoration: none;
         color: black;
+        cursor: pointer;
     }
 
     .page-button{
@@ -68,6 +69,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        cursor: pointer;
     }
 
     .page-button:hover {
@@ -111,6 +113,7 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+
 
 <!-- This need be in your widget HTML on page:
 <style>
@@ -204,101 +207,5 @@
     </div>
 </div>
 <hr>
-<div id="events-results"></div>
-<script>
- document.addEventListener('DOMContentLoaded', function() {
-    var filterCheckbox = document.getElementById('filterCheckbox');
-    var resultsDiv = document.getElementById('events-results');
-    var nextPage = 1;
-    var prevPage = null;
-    var maxPages = 1;
-
-    // Função para carregar eventos com base no filtro e página
-    function loadEvents(filter, page) {
-        var formData = new FormData();
-        formData.append('filterCheck', filter);
-        formData.append('page', page);
-
-        fetch('/fictional-university-wp/wp-admin/admin-ajax.php?action=custom_event_filter', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.text())
-        .then(data => {
-            resultsDiv.innerHTML = data;
-            updatePaginationButtons();
-        });
-    }
-
-    // Adicionar uma chamada AJAX inicial quando a página for carregada
-    loadEvents('venir', nextPage);
-
-    filterCheckbox.addEventListener('change', function() {
-        // Determinar o filtro com base no estado do switch
-        var selectedFilter = this.checked ? 'passe' : 'venir';
-        nextPage = 1; // Reinicia a página ao trocar o filtro
-        prevPage = null; // Reseta a página anterior
-        loadEvents(selectedFilter, nextPage);
-    });
-
-    // Adicionar um listener para os botões "Carregar Mais" e "Voltar"
-    document.addEventListener('click', function(event) {
-        if (event.target.classList.contains('load-more-button')) {
-            prevPage = nextPage;
-            nextPage++;
-            var selectedFilter = filterCheckbox.checked ? 'passe' : 'venir';
-            loadEvents(selectedFilter, nextPage);
-        } else if (event.target.classList.contains('load-prev-button')) {
-            nextPage = prevPage;
-            prevPage = (nextPage > 1) ? nextPage - 1 : null;
-            var selectedFilter = filterCheckbox.checked ? 'passe' : 'venir';
-            loadEvents(selectedFilter, nextPage);
-        } else if (event.target.classList.contains('pagination-buttons')) {
-            // Se clicar em uma página numerada, atualiza a classe 'current'
-            nextPage = parseInt(event.target.dataset.page);
-            prevPage = (nextPage > 1) ? nextPage - 1 : null;
-            var selectedFilter = filterCheckbox.checked ? 'passe' : 'venir';
-            loadEvents(selectedFilter, nextPage);
-        }
-    });
-
-    // Função para atualizar a visibilidade dos botões de paginação
-    function updatePaginationButtons() {
-        var paginationButtons = document.querySelectorAll('.pagination-buttons');
-        var loadMoreButton = document.querySelector('.load-more-button');
-        var loadPrevButton = document.querySelector('.load-prev-button');
-
-        maxPages = paginationButtons.length;
-
-        if (nextPage === 1) {
-            loadPrevButton.style.visibility = 'hidden';
-        } else {
-            loadPrevButton.style.visibility = 'visible';
-        }
-
-        if (nextPage >= maxPages) {
-            loadMoreButton.style.visibility = 'hidden';
-        } else {
-            loadMoreButton.style.visibility = 'visible';
-        }
-
-        paginationButtons.forEach(function(button) {
-            var pageNumber = parseInt(button.dataset.page);
-            var selectedFilter = filterCheckbox.checked ? 'passe' : 'venir';
-
-            if (pageNumber === nextPage) {
-                button.classList.add('current');
-            } else {
-                button.classList.remove('current');
-            }
-        });
-    }
-
-    // Adiciona a classe 'current' à página 1 inicialmente
-    var page1Button = document.querySelector('.pagination-buttons[data-page="1"]');
-    if (page1Button) {
-        page1Button.classList.add('current');
-    }
-});
-
-</script> -->
+<div id="events-results"></div> 
+-->
