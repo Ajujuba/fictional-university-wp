@@ -52,6 +52,8 @@ class Locator{
             const { lat, lon, title, id, link} = location;
     
             const marker = L.marker([lat, lon], { id: id }).bindPopup(title);
+            const listItem = this.createCard( id, lat, lon, title, link, this.clickPinToMarkCard); // Add bookmarks to the list
+            mapList.appendChild(listItem);
             
             const cardContainer = document.querySelector('.card-container');
 
@@ -83,9 +85,6 @@ class Locator{
 
             markers.addLayer(marker);// Add markers to the cluster
 
-            const listItem = this.createCard( id, lat, lon, title, link, this.clickPinToMarkCard); // Add bookmarks to the list
-    
-            mapList.appendChild(listItem);
         });
     
         this.map.addLayer(markers); // Add the cluster to the map

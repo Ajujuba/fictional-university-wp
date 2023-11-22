@@ -98,4 +98,161 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    // locator.js
+    if(document.getElementById('map')){
+        class Locator {
+            constructor() {
+                this.dataMarkerId = null;
+                this.clickPinToMarkCard = null;
+                this.map = L.map('map').setView([41.862680437343776, 12.477422940752222], 4);
+                this.load();
+                this.events();
+            }
+    
+            events() {
+                    
+                let moveMapTimeout;
+    
+                this.map.on('moveend', () => {
+                    clearTimeout(moveMapTimeout);
+                    moveMapTimeout = setTimeout(() => {
+                        this.updateVisibleMarkers();
+                    }, 100);
+                });
+    
+                this.map.on('zoomend', () => {
+                    clearTimeout(moveMapTimeout);
+                    moveMapTimeout = setTimeout(() => {
+                        this.updateVisibleMarkers();
+                    }, 100);
+                });
+            }
+    
+            load() {
+                L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                }).addTo(this.map);
+    
+                const mapList = document.querySelector('#map-list');
+                const markerCoordinates = [];
+                const markers = L.markerClusterGroup();
+                
+                locations.forEach((location) => {
+                    const { lat, lon, title, id, link } = location;
+
+                    const marker = L.marker([lat, lon], { id: id }).bindPopup(title);
+                    const listItem = this.createCard(id, lat, lon, title, link, this.clickPinToMarkCard);
+                    mapList.appendChild(listItem);
+
+                    const cardContainer = document.querySelector('.card-container');
+            
+                    marker.on('click', () => {
+                        if (cardContainer) {
+                            cardContainer.classList.add('highlighted');
+                            this.clickPinToMarkCard = id;
+            
+                            if (window.innerWidth > 1024) {
+                                mapList.scrollTo({
+                                    top: cardContainer.offsetTop - 12,
+                                    behavior: 'smooth',
+                                });
+                            } else {
+                                mapList.scrollTo({
+                                    left: cardContainer.offsetLeft - 12,
+                                    behavior: 'smooth',
+                                });
+                            }
+                        }
+                        this.map.setView([lat, lon], 13);
+                    });
+        
+                    markerCoordinates.push([lat, lon]);
+                    markers.addLayer(marker);
+                });
+    
+                this.map.addLayer(markers);
+            }
+    
+            updateVisibleMarkers() {
+                const mapBounds = this.map.getBounds();
+                const visibleLocations = locations.filter(location =>
+                    mapBounds.contains(L.latLng(location.lat, location.lon))
+                );
+    
+                const mapList = document.querySelector('#map-list');
+                mapList.innerHTML = '';
+    
+                if (visibleLocations.length === 0) {
+                    const listItem = document.createElement('li');
+                    listItem.classList.add('map-list-item');
+                    const html = `
+                        <div class="card-map">
+                        <span class="stars">Sorry, I couldn't find any results for your search area.</span>
+                        </div>
+                    `;
+                    listItem.innerHTML = html;
+                    mapList.appendChild(listItem);
+                    return;
+                }
+    
+                visibleLocations.forEach(location => {
+                    const { lat, lon, title, id, link } = location;
+                    const listItem = this.createCard(id, lat, lon, title, link, this.clickPinToMarkCard);
+                    mapList.appendChild(listItem);
+                });
+            }
+    
+            createCard(id, lat, lon, title, link, clickPinToMarkCard) {
+                const cardContainer = document.createElement('div');
+                cardContainer.classList.add('card-container');
+    
+                const listItem = document.createElement('li');
+                listItem.classList.add('map-list-item');
+    
+                listItem.addEventListener('click', (e) => {
+                this.dataMarkerId = listItem.dataset.markerId;
+    
+                const marker = this.findMarkerById(id);
+                if (this.dataMarkerId == id) {
+                    listItem.classList.add('highlighted');
+                }
+    
+                if (marker) {
+                    this.map.setView([lat, lon], 13);
+                }
+    
+                e.stopPropagation();
+                });
+    
+                if (clickPinToMarkCard == id || this.dataMarkerId == id) {
+                    listItem.classList.add('highlighted');
+                    this.clickPinToMarkCard = 0;
+                    this.dataMarkerId = null;
+                }
+    
+                listItem.dataset.markerId = id;
+    
+                const html = `
+                    <div class="card-map">
+                        <span class="stars">§</span>
+                        <span class="h5 title">${title}</span>
+                        <span class="text14">DESCRIPTION HERE</span>
+                    </div>
+                    <a href="${link}" class="btn-map">
+                        <span>Test button</span>
+                    </a>
+                `;
+    
+                listItem.innerHTML = html;
+                cardContainer.appendChild(listItem);
+    
+                return cardContainer;
+            }
+    
+            findMarkerById(id) {
+                return document.querySelector(`[data-marker-id="${id}"]`);
+            }
+        }
+        new Locator();
+    }
 });

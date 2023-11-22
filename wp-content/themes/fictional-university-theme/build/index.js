@@ -15,7 +15,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_Search__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modules/Search */ "./src/modules/Search.js");
 /* harmony import */ var _modules_MyNotes__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./modules/MyNotes */ "./src/modules/MyNotes.js");
 /* harmony import */ var _modules_Like__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./modules/Like */ "./src/modules/Like.js");
-/* harmony import */ var _modules_Locator__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./modules/Locator */ "./src/modules/Locator.js");
 
 
 // Our modules / classes
@@ -24,7 +23,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-
+//import Locator from "./modules/Locator"
 
 // Instantiate a new object using our modules/classes
 var mobileMenu = new _modules_MobileMenu__WEBPACK_IMPORTED_MODULE_1__["default"]();
@@ -32,7 +31,7 @@ var heroSlider = new _modules_HeroSlider__WEBPACK_IMPORTED_MODULE_2__["default"]
 var search = new _modules_Search__WEBPACK_IMPORTED_MODULE_3__["default"]();
 var myNotes = new _modules_MyNotes__WEBPACK_IMPORTED_MODULE_4__["default"]();
 var like = new _modules_Like__WEBPACK_IMPORTED_MODULE_5__["default"]();
-var locator = new _modules_Locator__WEBPACK_IMPORTED_MODULE_6__["default"]();
+//var locator = new Locator()
 
 /***/ }),
 
@@ -157,193 +156,6 @@ class Like {
   }
 }
 /* harmony default export */ __webpack_exports__["default"] = (Like);
-
-/***/ }),
-
-/***/ "./src/modules/Locator.js":
-/*!********************************!*\
-  !*** ./src/modules/Locator.js ***!
-  \********************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! jquery */ "jquery");
-/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_0__);
-
-class Locator {
-  constructor() {
-    this.dataMarkerId = null;
-    this.clickPinToMarkCard = null;
-    this.map = L.map('map').setView([41.862680437343776, 12.477422940752222], 4); //defines where my map open 
-    this.load();
-    this.events();
-  }
-  events() {
-    jquery__WEBPACK_IMPORTED_MODULE_0___default()("#map").on("click", '.test-ana', this.onMapClick);
-    let moveMapTimeout;
-    this.map.on('moveend', () => {
-      clearTimeout(moveMapTimeout);
-      moveMapTimeout = setTimeout(() => {
-        this.updateVisibleMarkers();
-      }, 100);
-    });
-    this.map.on('zoomend', () => {
-      clearTimeout(moveMapTimeout);
-      moveMapTimeout = setTimeout(() => {
-        this.updateVisibleMarkers();
-      }, 100);
-    });
-  }
-  load() {
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-    }).addTo(this.map);
-
-    //After creating the map, create the zoom control and adjust its position
-    var zoomControl = L.control.zoom({
-      position: 'topright'
-    });
-    zoomControl.addTo(this.map); // Add zoom control to map
-
-    const mapList = document.querySelector('#map-list');
-    const markerCoordinates = []; // array to store marker coordinates
-
-    var markers = L.markerClusterGroup(); // Create the marker cluster
-
-    // Iterate over locations and create markers for each one
-    locations.forEach(location => {
-      const {
-        lat,
-        lon,
-        title,
-        id,
-        link
-      } = location;
-      const marker = L.marker([lat, lon], {
-        id: id
-      }).bindPopup(title);
-      const cardContainer = document.querySelector('.card-container');
-
-      // Add a click event to the marker to highlight the card and focus on the point
-      marker.on('click', () => {
-        if (cardContainer) {
-          cardContainer.classList.add('highlighted');
-          this.clickPinToMarkCard = id;
-        }
-
-        // Scroll to the corresponding card
-        if (window.innerWidth > 1024) {
-          mapList.scrollTo({
-            top: cardContainer.offsetTop - 12,
-            behavior: 'smooth'
-          });
-        } else {
-          mapList.scrollTo({
-            left: cardContainer.offsetLeft - 12,
-            behavior: 'smooth'
-          });
-        }
-        this.map.setView([lat, lon], 13); // Focus on the marker point
-      });
-
-      markerCoordinates.push([lat, lon]); // Add the marker coordinates to the array
-
-      markers.addLayer(marker); // Add markers to the cluster
-
-      const listItem = this.createCard(id, lat, lon, title, link, this.clickPinToMarkCard); // Add bookmarks to the list
-
-      mapList.appendChild(listItem);
-    });
-    this.map.addLayer(markers); // Add the cluster to the map
-  }
-
-  //Updates my list to only show cards corresponding to my markers on the screen at the current time
-  updateVisibleMarkers() {
-    const mapBounds = this.map.getBounds();
-    const visibleLocations = locations.filter(location => mapBounds.contains(L.latLng(location.lat, location.lon)));
-    const mapList = document.querySelector('#map-list');
-    mapList.innerHTML = ''; // clean my list
-
-    // Add a message with local not found
-    if (visibleLocations.length === 0) {
-      const listItem = document.createElement('li');
-      listItem.classList.add('map-list-item');
-      const html = `
-                <div class="card-map">
-                    <span class="stars">No result for your search</span>
-                </div>
-            `;
-      listItem.innerHTML = html;
-      mapList.appendChild(listItem);
-      return;
-    }
-
-    //  Add cards only about my visible locations
-    visibleLocations.forEach(location => {
-      const {
-        lat,
-        lon,
-        title,
-        id,
-        link
-      } = location;
-      const listItem = this.createCard(id, lat, lon, title, link, this.clickPinToMarkCard);
-      mapList.appendChild(listItem);
-    });
-  }
-  onMapClick(e) {
-    popup.setLatLng(e.latlng).setContent("You clicked the map at " + e.latlng.toString()).openOn(this.map);
-  }
-  createCard(id, lat, lon, title, link, clickPinToMarkCard) {
-    const cardContainer = document.createElement('div');
-    cardContainer.classList.add('card-container');
-    const listItem = document.createElement('li');
-    listItem.classList.add('map-list-item');
-
-    // Add an event when click in the card
-    listItem.addEventListener('click', e => {
-      this.dataMarkerId = jquery__WEBPACK_IMPORTED_MODULE_0___default()(listItem).data('marker-id');
-
-      // Find the card and add highlight
-      const marker = this.findMarkerById(id);
-      if (this.dataMarkerId == id) {
-        listItem.classList.add('highlighted');
-      }
-      if (marker) {
-        this.map.setView([lat, lon], 13); // Zoom in the marker corresponding
-      }
-
-      e.stopPropagation(); // Prevent click propagation to avoid conflicts with the map
-    });
-
-    //Highlight the corresponding card
-    if (clickPinToMarkCard == id || this.dataMarkerId == id) {
-      listItem.classList.add('highlighted');
-      this.clickPinToMarkCard = 0; // this line makes my map lost the highlighted if use move or zoom
-      this.dataMarkerId = null;
-    }
-    listItem.setAttribute('data-marker-id', id);
-    const html = `
-            <div class="card-map">
-                <span class="stars">§</span>
-                <span class="h5 title">${title}</span>
-                <span class="text14">DESCRIPTION HERE</span>
-            </div>
-            <a href="https://www.google.com" class="btn-map">
-                <span>Test button</span>
-            </a>
-        `;
-    listItem.innerHTML = html;
-    cardContainer.appendChild(listItem);
-    return cardContainer;
-  }
-  findMarkerById(id) {
-    let foundMarker = null;
-    foundMarker = document.querySelector(`[data-marker-id="${id}"]`);
-    return foundMarker;
-  }
-}
-/* harmony default export */ __webpack_exports__["default"] = (Locator);
 
 /***/ }),
 

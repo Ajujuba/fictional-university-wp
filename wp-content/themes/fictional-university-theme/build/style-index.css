@@ -1887,6 +1887,7 @@ body.admin-bar .search-overlay {
   justify-content: center;
   flex-direction: column;
   align-items: center;
+  cursor: pointer;
 }
 
 .leaflet-top.leaflet-left {
