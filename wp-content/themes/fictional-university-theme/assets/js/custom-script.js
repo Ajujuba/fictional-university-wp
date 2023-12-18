@@ -4,16 +4,21 @@ document.addEventListener('DOMContentLoaded', function() {
     var nextPage = 1;
     var prevPage = null;
     var maxPages = 1;
+    var locationFilter = 'all';
+    var monthFilter = 'all';
 
     console.log(customScriptData.admin_ajax_url);
+    console.log(customScriptData.theme_path);
 
     if(filterCheckbox && resultsDiv){
 
         //Function to load events based on filter and page
-        function loadEvents(filter, page) {
+        function loadEvents(filter, page, locationFilter, monthFilter) {
             var formData = new FormData();
             formData.append('filterCheck', filter);
             formData.append('page', page);
+            formData.append('golf-location', locationFilter);
+            formData.append('filter-month', monthFilter);
 
             fetch(customScriptData.admin_ajax_url + '?action=custom_event_filter', {
                 method: 'POST',
@@ -27,14 +32,36 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // Add an initial AJAX call when the page loadsa
-        loadEvents('venir', nextPage);
+        loadEvents('venir', nextPage, locationFilter, monthFilter);
+
+        var eventFilterForm = document.getElementById('filter-form');
+
+        eventFilterForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            var isChecked = document.getElementById('filterCheckbox').checked;
+            selectedFilter = isChecked ? 'passe' : 'venir';
+            nextPage = 1;
+            prevPage = null;
+            locationFilter = document.getElementById('golf-location').value;
+            monthFilter = document.getElementById('filter-month').value;    
+            console.log(locationFilter)
+            console.log(monthFilter)
+            console.log(selectedFilter)
+            loadEvents(selectedFilter, nextPage, locationFilter, monthFilter);
+        });
 
         filterCheckbox.addEventListener('change', function() {
             // Determine filter based on switch state
             var selectedFilter = this.checked ? 'passe' : 'venir';
             nextPage = 1; // Restarts the page when changing the filter
-            prevPage = null; //Reset the previous page
-            loadEvents(selectedFilter, nextPage);
+            prevPage = null;
+            locationFilter = 'all';
+            monthFilter = 'all';
+            document.getElementById('golf-location').value = 'all';
+            document.getElementById('filter-month').value = 'all';
+
+            loadEvents(selectedFilter, nextPage, locationFilter, monthFilter);
         });
 
         //Add a listener for the forward or back buttons on pages
@@ -43,35 +70,38 @@ document.addEventListener('DOMContentLoaded', function() {
                 prevPage = nextPage;
                 nextPage++;
                 var selectedFilter = filterCheckbox.checked ? 'passe' : 'venir';
-                loadEvents(selectedFilter, nextPage);
+                loadEvents(selectedFilter, nextPage, locationFilter, monthFilter);
             } else if (event.target.classList.contains('load-prev-button')) {
                 nextPage = prevPage;
                 prevPage = (nextPage > 1) ? nextPage - 1 : null;
                 var selectedFilter = filterCheckbox.checked ? 'passe' : 'venir';
-                loadEvents(selectedFilter, nextPage);
+                loadEvents(selectedFilter, nextPage, locationFilter, monthFilter);
             } else if (event.target.classList.contains('pagination-buttons')) {
                 // If you click on a numbered page, it updates the 'current' class
                 nextPage = parseInt(event.target.dataset.page);
                 prevPage = (nextPage > 1) ? nextPage - 1 : null;
                 var selectedFilter = filterCheckbox.checked ? 'passe' : 'venir';
-                loadEvents(selectedFilter, nextPage);
+                loadEvents(selectedFilter, nextPage, locationFilter, monthFilter);
             }
         });
 
         // Function to update the visibility of pagination buttons
         function updatePaginationButtons() {
-            var paginationButtons = document.querySelectorAll('.pagination-buttons');
-            var loadMoreButton = document.querySelector('.load-more-button');
-            var loadPrevButton = document.querySelector('.load-prev-button');
+            var paginationContainer = document.querySelector('.pagination');
+            var paginationButtons = paginationContainer.querySelectorAll('.pagination-buttons');
+            var loadMoreButton = paginationContainer.querySelector('.load-more-button');
+            var loadPrevButton = paginationContainer.querySelector('.load-prev-button');
 
-            maxPages = paginationButtons.length;
-            if(loadMoreButton){
+            // Obtenha o número máximo de páginas do atributo de dados
+            var maxPages = parseInt(paginationContainer.dataset.maxPages);
+
+            if (loadMoreButton) {
                 if (nextPage === 1) {
                     loadPrevButton.style.visibility = 'hidden';
                 } else {
                     loadPrevButton.style.visibility = 'visible';
                 }
-    
+
                 if (nextPage >= maxPages) {
                     loadMoreButton.style.visibility = 'hidden';
                 } else {
@@ -79,9 +109,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
 
-            paginationButtons.forEach(function(button) {
+            paginationButtons.forEach(function (button) {
                 var pageNumber = parseInt(button.dataset.page);
-                var selectedFilter = filterCheckbox.checked ? 'passe' : 'venir';
 
                 if (pageNumber === nextPage) {
                     button.classList.add('current');
@@ -91,6 +120,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
+        
         // Add class 'current' to page 1 initially
         var page1Button = document.querySelector('.pagination-buttons[data-page="1"]');
         if (page1Button) {

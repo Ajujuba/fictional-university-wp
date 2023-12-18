@@ -209,6 +209,7 @@ function enqueue_custom_script_events() {
 	// Define the data you want to send to your JS script
     $script_data = array(
         'admin_ajax_url' => esc_url(admin_url('admin-ajax.php')),
+        'theme_path' => get_template_directory_uri(),
     );
 
     // Finds the script and sends the data
@@ -216,19 +217,36 @@ function enqueue_custom_script_events() {
 }
 add_action('wp_enqueue_scripts', 'enqueue_custom_script_events');
 
+function save_month_acf($post_id) {
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE || !current_user_can('edit_post', $post_id)) {
+        return;
+    }
+
+    if (get_post_type($post_id) === 'post') {
+        $start_date = get_field('event_date_inicio', $post_id);
+
+        if ($start_date) {
+            $month = date('m', strtotime($start_date));
+
+            update_field('month_hidden', $month, $post_id);
+        }
+    }
+}
+add_action('save_post', 'save_month_acf');
+
 #Search my events filtered for cards
 function custom_event_filter_shortcode() {
     ob_start();
     $today = date('Ymd');
 
     $filter = isset($_POST['filterCheck']) ? sanitize_text_field($_POST['filterCheck']) : 'venir'; // Current filter
+    $location_filter = isset($_POST['golf-location']) ? sanitize_text_field($_POST['golf-location']) : 'all';
+    $month_filter = isset($_POST['filter-month']) ? sanitize_text_field($_POST['filter-month']) : 'all';
     $page = isset($_POST['page']) ? intval($_POST['page']) : 1; // Current Page
 
     $args = array(
         'post_type' => 'post',
         'meta_key' => 'event_date_inicio',
-        'orderby' => 'meta_value_num',
-        'order' => 'ASC',
         'posts_per_page' => 3,
         'paged' => $page,
     );
@@ -242,6 +260,8 @@ function custom_event_filter_shortcode() {
                 'type' => 'numeric'
             )
         );
+        $args['orderby'] = 'event_date_inicio';
+		$args['order'] = 'ASC';
     } elseif ($filter === 'passe') {
         $args['meta_query'] = array(
             array(
@@ -251,44 +271,105 @@ function custom_event_filter_shortcode() {
                 'type' => 'numeric'
             )
         );
+        $args['orderby'] = 'event_date_inicio';
+		$args['order'] = 'DESC';
     }
+
+    if ($location_filter !== 'all') {
+        $args['meta_query'][] = array(
+            'key' => 'localization_competitions', 
+            'value' => $location_filter,
+            'compare' => '=',
+        );
+    }
+
+	if ($month_filter !== 'all') {
+		$args['meta_query'][] = array(
+			'key' => 'month_hidden',
+			'value' => $month_filter, 
+			'compare' => '=',
+		);
+
+	}
 
     $query = new WP_Query($args);
 
-    if ($query->have_posts()) {
+   if ($query->have_posts()) {
         echo '<div class="row row-cols-1 row-cols-md-3">'; // Start Bootstrap row div
         $count = 0; // Start counting cards per line
         while ($query->have_posts()) : $query->the_post();
             get_template_part('template-parts/content', 'card', array('filter' => $filter));
             $count++;
-            // If you reach 3 cards, close the current line and start a new one
-            if ($count % 3 === 0) {
-                echo '</div><div class="row row-cols-1 row-cols-md-3">';
-            }
         endwhile;
         echo '</div>'; // Close the last line
 
-		echo '<div class="pagination">';
+		$total_posts = $query->found_posts;
+		$posts_per_page = $args['posts_per_page'];
+		$max_pages = ceil($total_posts / $posts_per_page);
+	
+		echo '<div class="pagination" data-max-pages="' . $max_pages . '">';
 
-        $max_pages = $query->max_num_pages;
-
-        // Add a button to the previous page
+		// Add a button to the previous page
 		$prev_page = $page - 1;
-		echo '<div class="load-prev-button" data-prev-page="' . $prev_page . '"> &larr; </div>';
+		echo '<div class="load-prev-button" data-prev-page="' . $prev_page . '"> <- </div>';
 
-		// Add numbered buttons to all pages
-		for ($i = 1; $i <= $max_pages; $i++) {
-			echo '<div class="pagination-buttons page-button" data-page="' . $i . '"> ' . $i . '</div>';
+		// Always show the first page
+		echo '<div class="pagination-buttons page-button';
+		if ($page === 1) {
+			echo ' current-page';
+		}
+		if($page !== 1){
+			echo '" data-page="1">1</div>';
 		}
 
-        // Add a button for the next page
-        $next_page = $page + 1;
-        echo '<div class="load-more-button" data-next-page="' . $next_page . '"> &rarr; </div>';
+		//Show dots if there are more than 2 pages
+		if ($max_pages > 3 && $page !== 1 && $page !== 2 && $page !== 3) {
+			echo '<div class="pagination-buttons-dots">...</div>';
+		}
+
+		// Show the previous page if it's within the visible range
+		if ($page > 2) {
+			echo '<div class="pagination-buttons page-button';
+			if ($page - 1 === $page) {
+				echo ' current-page';
+			}
+			echo '" data-page="' . ($page - 1) . '">' . ($page - 1) . '</div>';
+		}
+
+		// Show the current page
+		echo '<div class="pagination-buttons page-button current-page" data-page="' . $page . '">' . $page . '</div>';
+
+		// Show the next page if it's within the visible range
+		if ($page < $max_pages - 1) {
+			echo '<div class="pagination-buttons page-button';
+			if ($page + 1 === $page) {
+				echo ' current-page';
+			}
+			echo '" data-page="' . ($page + 1) . '">' . ($page + 1) . '</div>';
+		}
+		
+		// Show dots if there are more than 3 pages
+		if ($max_pages > 3 && $page != $max_pages && $page != $max_pages - 1  && $page != $max_pages - 2) {
+			echo '<div class="pagination-buttons-dots">...</div>';
+		}
+
+		// Show the last page
+		if($page != $max_pages){
+			echo '<div class="pagination-buttons page-button';
+			if ($page === $max_pages) {
+				echo ' current-page';
+			}
+			echo '" data-page="' . $max_pages . '">' . $max_pages . '</div>';
+		}
+		
+		// Add a button for the next page
+		$next_page = $page + 1;
+		echo '<div class="load-more-button" data-next-page="' . $next_page . '"> -> </div>';
 		echo '</div>';
 
         wp_reset_postdata();
-    }else {
-        echo 'Events not found.';
+    } else {
+        echo 'Événements introuvables.';
     }
 
 	$content = ob_get_clean();
