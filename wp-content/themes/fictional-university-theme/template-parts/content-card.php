@@ -81,12 +81,50 @@
         color: black;
     }
 
+    /* Descomment this part if you will not use bootstrap
+    @media (min-width: 1400px){
+        .container, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl {
+            max-width: 1320px;
+        }
+    }
+    @media (min-width: 768px){
+        .row-cols-md-3>* {
+            flex: 0 0 auto;
+            width: 33.33333333%;
+        }
+    }
+        
+    .row {
+        --bs-gutter-x: 1.5rem;
+        --bs-gutter-y: 0;
+        display: flex;
+        flex-wrap: wrap;
+        margin-top: calc(-1 * var(--bs-gutter-y));
+        margin-right: calc(-.5 * var(--bs-gutter-x));
+        margin-left: calc(-.5 * var(--bs-gutter-x));
+    } 
+
+    .load-more-button, .load-prev-button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 30px;
+    } */
+   
+
 </style>
 <?php
     $thumbnail_url = get_the_post_thumbnail_url();
 
     $event_date_inicio = get_field('event_date_inicio');
-    $formatted_date = date('d', strtotime($event_date_inicio));
+    $event_date_fim = get_field('event_date_fim');
+
+    if($event_date_fim == $event_date_inicio || empty($event_date_fim) ){
+        $day_event = date('d/m/Y', strtotime($event_date_inicio));
+    }else{
+        $day_event = date('d', strtotime($event_date_inicio)) . " au " . date('d/m/Y', strtotime($event_date_fim));
+
+    }
 
     $filter = isset($args['filter']) ? $args['filter'] : 'venir';
     if($filter == 'passe'){
@@ -102,9 +140,9 @@
         <div style="background-image: url(<?php echo esc_url($thumbnail_url); ?>)" class="card-img-top"></div>
         <div class="card-body-content">
             <h5 class="card-title">
-                <span>Your addreess here...</span>
-                    |
-                <span> <?= $formatted_date ?> au <?= get_field('event_date_fim') ?> </span>
+                <span><?= get_field('localization_competitions') ?></span>
+                        &bull;
+                <span> <?= $day_event ?> </span>
             </h5> 
             <p class="card-text"><?php the_title() ?></p>
         </div>
@@ -193,18 +231,49 @@
         line-height: 24px;
     }
 </style>
-<div class="">
-    <div class="row">
-        <span class="title-filter">FILTRER PAR:</span>
-    </div>
+<div class="container-filter">
     <div class="boxFilter">
-        <span class="label-filter">À VENIR</span>
-        <label class="switch">
-            <input id="filterCheckbox" type="checkbox">
-            <span class="slider round"></span>
-        </label>
-        <span class="label-filter">PASSÉ</span>
+        <span class="title-filter">Filtrer par:</span>
+        <div class="options-filter">
+            <span class="label-filter">À VENIR</span>
+            <label class="switch">
+                <input id="filterCheckbox" type="checkbox">
+                <span class="slider round"></span>
+            </label>
+            <span class="label-filter">PASSÉS</span>
+        </div>
     </div>
+    <form class="filter-form" id="filter-form">
+        <select class="select-competition" name="golf-location" id="golf-location">
+            <option value="all">Golf</option>
+            <option value="Casa Green Golf">Casa Green Golf</option>
+            <option value="Golf Teelal">Golf Teelal</option>
+            <option value="Golf des Lacs">Golf des Lacs</opetion>
+            <option value="Oued Fès Golf">Oued Fès Golf</option>
+            <option value="Royal Golf Fès">Royal Golf Fès</option>
+            <option value="Noria Golf">Noria Golf</option>
+            <option value="Golf Les Dunes">Golf Les Dunes</option>
+            <option value="Tazegzout Golf">Tazegzout Golf</option>
+            <option value="Royal Golf El Jadida">Royal Golf El Jadida</option>
+        </select>
+        <select class="select-competition" name="filter-month" id="filter-month">
+            <option value="all">Mois</option>
+            <option value="01">Janvier</option>
+            <option value="02">Février</option>
+            <option value="03">Mars</option>
+            <option value="04">Avril</option>
+            <option value="05">Mai</option>
+            <option value="06">Juin</option>
+            <option value="07">Juillet </option>
+            <option value="08">Aout</option>
+            <option value="09">Septembre </option>
+            <option value="10">Octobre</option>
+            <option value="11">Novembre </option>
+            <option value="12">Décembre</option>
+        </select>
+
+        <button type="submit">Rechercher</button>
+    </form>
 </div>
 <hr>
 <div id="events-results"></div> 
