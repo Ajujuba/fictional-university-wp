@@ -1942,4 +1942,33 @@ img.leaflet-marker-icon {
   scrollbar-width: none; /* Firefox */
 }
 
+@media (max-width: 768px) {
+  #map-list {
+    position: absolute;
+    top: unset;
+    left: 0;
+    bottom: 0;
+    width: 90%;
+    z-index: 999;
+    padding: 20px;
+    overflow: scroll;
+    max-height: 700px;
+    margin-left: 30px;
+    display: flex;
+  }
+  .card-container {
+    padding: 0px 5px;
+  }
+  .map-list-item {
+    margin-bottom: 10px;
+    background-color: #f5f5f5;
+    min-height: 160px;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    opacity: 0.95;
+    width: 255px;
+  }
+}
+
 /*# sourceMappingURL=style-index.css.map*/
