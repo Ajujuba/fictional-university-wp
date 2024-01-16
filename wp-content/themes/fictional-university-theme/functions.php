@@ -198,6 +198,8 @@ function ignoreCertainFiles($exclude_filters){
     $exclude_filters[] = 'fictional-university-theme/node_modules';
     $exclude_filters[] = 'twentytwentyone';
     $exclude_filters[] = 'twentytwentytwo';
+    $exclude_filters[] = 'twentytwentythree';
+    $exclude_filters[] = 'fictional-university-block-theme';
     return $exclude_filters;
 }
 add_filter('ai1wm_exclude_themes_from_export', 'ignoreCertainFiles');
