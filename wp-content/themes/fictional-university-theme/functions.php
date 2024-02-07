@@ -32,7 +32,6 @@ function university_files(){
         'nonce' => wp_create_nonce('wp_rest') //this line will create a nonce (like 'a secret key') for autorize my users in requests like delete or update
     ]);
 }
-
 add_action('wp_enqueue_scripts', 'university_files');
 
 #Get page title for my browser  when load my hook after_setup_theme
@@ -45,9 +44,7 @@ function university_features(){
     add_image_size('professorLandscape', 400, 260, false);
     add_image_size('professorPortrait', 480, 660, true);
     add_image_size('pageBanner', 1500, 350, true);
-
 }
-
 add_action('after_setup_theme', 'university_features');
 
 # Remove The [...] is added by the_excerpt().
@@ -82,8 +79,6 @@ function university_adjust_queries($query){
         $query->set('order', 'ASC');
         $query->set('posts_perpage', '-1');
     }
-
-
 }
 add_action('pre_get_posts', 'university_adjust_queries');
 
@@ -204,18 +199,21 @@ function ignoreCertainFiles($exclude_filters){
 }
 add_filter('ai1wm_exclude_themes_from_export', 'ignoreCertainFiles');
 
-#register my script to use in Events card
+#register my script to use in Events card & Map
 function enqueue_custom_script_events() {
-    wp_enqueue_script('custom-script', get_template_directory_uri() . '/assets/js/custom-script.js', array(), null, true);
+    //Load my script only if the page is page-map-test or events-card-test
+    if (is_page(array('page-map-test', 'events-card-test', 'map-test'))) {
+        wp_enqueue_script('custom-script', get_template_directory_uri() . '/assets/js/custom-script.js', array(), null, true);
 
-	// Define the data you want to send to your JS script
-    $script_data = array(
-        'admin_ajax_url' => esc_url(admin_url('admin-ajax.php')),
-        'theme_path' => get_template_directory_uri(),
-    );
+        // Define the data you want to send to your JS script
+        $script_data = array(
+            'admin_ajax_url' => esc_url(admin_url('admin-ajax.php')),
+            'theme_path' => get_template_directory_uri(),
+        );
 
-    // Finds the script and sends the data
-    wp_localize_script('custom-script', 'customScriptData', $script_data);
+        // Finds the script and sends the data
+        wp_localize_script('custom-script', 'customScriptData', $script_data);
+    }
 }
 add_action('wp_enqueue_scripts', 'enqueue_custom_script_events');
 
@@ -378,6 +376,5 @@ function custom_event_filter_shortcode() {
     echo $content;
     exit;
 }
-
 add_action('wp_ajax_custom_event_filter', 'custom_event_filter_shortcode');
 add_action('wp_ajax_nopriv_custom_event_filter', 'custom_event_filter_shortcode');
