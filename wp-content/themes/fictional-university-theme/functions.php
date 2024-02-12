@@ -378,3 +378,8 @@ function custom_event_filter_shortcode() {
 }
 add_action('wp_ajax_custom_event_filter', 'custom_event_filter_shortcode');
 add_action('wp_ajax_nopriv_custom_event_filter', 'custom_event_filter_shortcode');
+
+function load_custom_script_in_admin() {
+    wp_enqueue_script('custom-script-automatic-coord', get_theme_file_uri('/assets/js/custom-script-automatic-coord.js'), array(), null, true);
+}
+add_action('admin_enqueue_scripts', 'load_custom_script_in_admin');
