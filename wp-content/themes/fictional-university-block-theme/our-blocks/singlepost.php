@@ -1,7 +1,8 @@
 <?php 
 
-    while(have_posts()){
-        the_post();
+    #As of WP 6.4 we have block-themes within the singular content, WP already executes the loop itself, so for page.php, singlepost.php or singleQualquerCoisa.php I can remove the while() and the the_post() call
+    while(have_posts()){ //comment if you update to WP 6.4
+        the_post(); //comment if you update to WP 6.4
         pageBanner() ?>
 
         <div class="container container--narrow page-section">
@@ -13,4 +14,4 @@
             </div>
         </div>
     <?php
-    }
+    } //comment if you update to WP 6.4

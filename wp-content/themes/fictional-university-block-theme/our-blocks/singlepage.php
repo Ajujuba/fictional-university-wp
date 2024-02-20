@@ -1,7 +1,7 @@
 <?php 
 
-while (have_posts()) {
-    the_post(); 
+while (have_posts()) { //comment if you update to WP 6.4
+    the_post(); //comment if you update to WP 6.4
     pageBanner(); ?>
 
     <div class="container container--narrow page-section">
@@ -53,6 +53,6 @@ while (have_posts()) {
 
     </div>
 
-<?php }
+<?php } //comment if you update to WP 6.4
 
 
