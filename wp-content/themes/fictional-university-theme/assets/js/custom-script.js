@@ -120,12 +120,23 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
-        
         // Add class 'current' to page 1 initially
         var page1Button = document.querySelector('.pagination-buttons[data-page="1"]');
         if (page1Button) {
             page1Button.classList.add('current');
         }
+
+        function cleanFilter() {
+            document.getElementById('filterCheckbox').checked = false;
+        }
+
+        window.addEventListener('load', function() {
+            if (document.getElementById('filterCheckbox').checked) {
+                console.log('call cleanFilter')
+                cleanFilter(); //Always clean when the page loads (add this to resolve this problem: When I select a past event and go back to the center page (with the browser arrows), I see the "upcoming" events with the toggle on the "past" side)
+            }
+        });
+        
     }
 
     // locator.js
