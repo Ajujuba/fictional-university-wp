@@ -234,6 +234,14 @@ function save_month_acf($post_id) {
 }
 add_action('save_post', 'save_month_acf');
 
+function custom_event_filter_shortcode_output() {
+    ob_start();
+    get_template_part('template-parts/custom-event-filter');
+    $content = ob_get_clean();
+    return $content;
+  }
+  add_shortcode('custom_event_filter_shortcode', 'custom_event_filter_shortcode_output');
+  
 #Search my events filtered for cards
 function custom_event_filter_shortcode() {
     ob_start();
@@ -369,7 +377,11 @@ function custom_event_filter_shortcode() {
 
         wp_reset_postdata();
     } else {
-        echo 'Événements introuvables.';
+        //$current_language = pll_current_language();
+        $current_language = get_locale(); //Get the WP language
+        $custom_translations = defined('CUSTOM_TRANSLATIONS') ? CUSTOM_TRANSLATIONS : array();
+        $pasTrouve_label = isset($custom_translations[$current_language]['pasTrouve']) ? $custom_translations[$current_language]['pasTrouve'] : "Pas d'événements trouvés pour votre recherche.";
+        echo $pasTrouve_label;
     }
 
 	$content = ob_get_clean();
@@ -383,3 +395,58 @@ function load_custom_script_in_admin() {
     wp_enqueue_script('custom-script-automatic-coord', get_theme_file_uri('/assets/js/custom-script-automatic-coord.js'), array(), null, true);
 }
 add_action('admin_enqueue_scripts', 'load_custom_script_in_admin');
+
+function set_custom_translations() {
+    $translations = array(
+        'en_US' => array(
+            'filtrer' => 'Filter by',
+            'venir' => 'UPCOMING',
+            'passes' => 'PAST',
+      'rechercher' => 'Search',
+      'decouvrir' => 'Discover',
+      'passe' => 'PAST',
+      "mois" => "Month",
+            "jan" => "January",
+            "feb" => "February",
+            "mar" => "March",
+            "may" => "May",
+            "apr" => "April",
+            "jun" => "June",
+            "jul" => "July ",
+            "aug" => "August",
+            "sep" => "September ",
+            "oct" => "October",
+            "nov" => "November ",
+            "dec" => "December",
+            "au"  => "to",
+            "pasTrouve" => "No events found for your search.",
+        ),
+        'fr_FR' => array(
+            'filtrer' => 'Filtrer par',
+            'venir' => 'À VENIR',
+            'passes' => 'PASSÉS',
+      'rechercher' => 'Rechercher',
+      'decouvrir' => 'Découvrir',
+      'passe' => 'PASSÉ',
+      "mois" => "Mois",
+            "jan" => "Janvier",
+            "feb" => "Février",
+            "mar" => "Mars",
+            "may" => "Avril",
+            "apr" => "Mai",
+            "jun" => "Juin",
+            "jul" => "Juillet ",
+            "aug" => "Aout",
+            "sep" => "Septembre ",
+            "oct" => "Octobre",
+            "nov" => "Novembre ",
+            "dec" => "Décembre",
+            "au"  => "au",
+            "pasTrouve" => "Pas d'événements trouvés pour votre recherche.",
+        ),
+    );
+  
+    return $translations;
+}
+
+define('CUSTOM_TRANSLATIONS', set_custom_translations());

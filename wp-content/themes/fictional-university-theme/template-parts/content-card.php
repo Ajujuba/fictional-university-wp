@@ -114,24 +114,33 @@
 
 </style>
 <?php
+
+    $current_language = get_locale();
+    $custom_translations = defined('CUSTOM_TRANSLATIONS') ? CUSTOM_TRANSLATIONS : array();
+    $decouvrir_label = isset($custom_translations[$current_language]['decouvrir']) ? $custom_translations[$current_language]['decouvrir'] : 'Découvrir';
+    $au_label = isset($custom_translations[$current_language]['au']) ? $custom_translations[$current_language]['au'] : ' au ';
     $thumbnail_url = get_the_post_thumbnail_url();
 
     $event_date_inicio = get_field('event_date_inicio');
     $event_date_fim = get_field('event_date_fim');
 
+    //If my start and end dates are the same or if final_date is empty, I only show the start_date
     if($event_date_fim == $event_date_inicio || empty($event_date_fim) ){
         $day_event = date('d/m/Y', strtotime($event_date_inicio));
     }else{
-        $day_event = date('d', strtotime($event_date_inicio)) . " au " . date('d/m/Y', strtotime($event_date_fim));
+        $day_event = date('d', strtotime($event_date_inicio)) . " $au_label " . date('d/m/Y', strtotime($event_date_fim));
 
     }
 
+    // $filter = isset($args['filter']) ? $args['filter'] : 'venir';
+    // if($filter == 'passe'){
+    //     $tagCard = 'PASSÉ';
+    // }else{
+    //     $tagCard = 'À VENIR';
+    // }
     $filter = isset($args['filter']) ? $args['filter'] : 'venir';
-    if($filter == 'passe'){
-        $tagCard = 'PASSÉ';
-    }else{
-        $tagCard = 'À VENIR';
-    }
+    $tagCard_key = ($filter == 'passe') ? 'passe' : 'venir';
+    $tagCard = isset($custom_translations[$current_language][$tagCard_key]) ? $custom_translations[$current_language][$tagCard_key] : '';
 ?>
 
 <div class="content-card">
@@ -147,13 +156,14 @@
             <p class="card-text"><?php the_title() ?></p>
         </div>
     </div>
-    <a href="<?php the_permalink() ?>" class="btn-card">Découvrir</a>
+    <a href="<?php the_permalink() ?>" class="btn-card"><?php echo  $decouvrir_label ?></a>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 
 
-<!-- This need be in your widget HTML on page:
+<!-- DON'T NEED MORE BECAUSE CREATE A SHORTCODE TO FILTER EVENTS TEMPLETE (CUSTOM-EVENT-FILTER.PHP)
+ This need be in your widget HTML on page:
 <style>
     /* The switch - the box around the slider */
     .switch {
