@@ -18,6 +18,19 @@ function university_custom_rest(){
 }
 add_action('rest_api_init', 'university_custom_rest');
 
+function load_jquery_ui() {
+    // wp_enqueue_style( 'jquery-ui-css', 'https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css', array(), '1.12.1' );
+    // wp_enqueue_script( 'jquery', 'https://code.jquery.com/jquery-3.6.0.min.js', array(), '3.6.0', true );
+    // wp_enqueue_script( 'jquery-ui-js', 'https://code.jquery.com/ui/1.12.1/jquery-ui.min.js', array('jquery'), '1.12.1', true );
+
+    // Register jQuery and DatePickerRange
+    wp_enqueue_script( 'jquery', 'https://cdn.jsdelivr.net/jquery/latest/jquery.min.js', array(), null, true );
+    wp_enqueue_script( 'moment-js', 'https://cdn.jsdelivr.net/momentjs/latest/moment.min.js', array('jquery'), null, true );
+    wp_enqueue_script( 'daterangepicker-js', 'https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js', array('jquery', 'moment-js'), null, true );
+    wp_enqueue_style( 'daterangepicker-css', 'https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css', array(), null );
+}
+add_action( 'wp_enqueue_scripts', 'load_jquery_ui' );
+
 #Load my css e js when load my hook wp_enqueue_scripts
 function university_files(){
     wp_enqueue_script('main-university-js', get_theme_file_uri('/build/index.js'), array('jquery'), '1.0', true);// here I say my js uses a jquey dependency, then the version of my js, and the last one says if I want to load before the body closes
@@ -450,3 +463,54 @@ function set_custom_translations() {
 }
 
 define('CUSTOM_TRANSLATIONS', set_custom_translations());
+
+
+add_action('wp_ajax_filter_posts', 'filter_posts');
+add_action('wp_ajax_nopriv_filter_posts', 'filter_posts');
+
+function filter_posts() {
+    $postName = isset($_GET['post_name']) ? $_GET['post_name'] : '';
+    $postDate = isset($_GET['post_date']) ? $_GET['post_date'] : '';
+    
+    $dates = explode(' - ', $postDate);
+    $startDate = isset($dates[0]) ? date('Y-m-d', strtotime($dates[0])) : '';
+    $endDate = isset($dates[1]) ? date('Y-m-d', strtotime($dates[1])) : '';
+
+    $args = array(
+        'post_type' => 'post',
+        'posts_per_page' => -1,
+        's' => $postName,
+        'date_query' => array(
+            array(
+                'after' => $startDate,
+                'before' => $endDate,
+                'inclusive' => true
+            )
+        )
+    );
+
+    $query = new WP_Query($args);
+
+    if ($query->have_posts()) {
+        while ($query->have_posts()) {
+            $query->the_post();
+            ?>
+            <div class="post-item">
+                <h2 class="headline headline--medium headline--post-title"><a href="<?php the_permalink()?>"><?php the_title() ?></a></h2>
+                <div class="metabox">
+                    <p>Posted by: <?php the_author_posts_link() ?> on <?php the_time('j/n/Y')?> in <?= get_the_category_list(', ') ?> </p>
+                </div>
+                <div class="generic-content">
+                    <?php the_excerpt()?>
+                    <p><a class="btn btn--blue" href="<?php the_permalink() ?>">Continnue Reading &raquo;</a></p>
+                </div>
+            </div>
+            <?php
+        }
+        wp_reset_postdata();
+    } else {
+        echo '<p>Not found. Please search other thing.</p>';
+    }
+
+    wp_die();
+}
