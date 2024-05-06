@@ -225,6 +225,7 @@ $page2 = get_page_by_path('content-2');
             <input type="text" id="first_name"  name="first_name" placeholder="Your name" required>
             <input type="text" id="last_name" name="last_name" placeholder="Your last name" required>
             <input type="email"  id="email" name="email" placeholder="Your email" required>
+            <input type="hidden"  id="language" name="language" value="fr">
             <br>
             <button type="button" onclick="validarFormulario()">Enviar para Donorbox</button>
         </form>
@@ -271,6 +272,7 @@ get_footer();
         var firstName = document.getElementById('first_name').value;
         var lastName = document.getElementById('last_name').value;
         var email = document.getElementById('email').value;
+        var language = document.getElementById('language').value;
 
         // Construir a URL com os parâmetros preenchidos
         var donorboxURL = "https://donorbox.org/embed/donor-test-3?";
@@ -278,6 +280,7 @@ get_footer();
         donorboxURL += "&last_name=" + encodeURIComponent(lastName);
         donorboxURL += "&email=" + encodeURIComponent(email);
         donorboxURL += "&amount=" + encodeURIComponent(amount);
+        donorboxURL += "&language=" + encodeURIComponent(language);
 
         // Redirecionar para a URL da Donorbox
         window.location.href = donorboxURL;
