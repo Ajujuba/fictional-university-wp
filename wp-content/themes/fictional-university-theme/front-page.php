@@ -274,6 +274,13 @@ get_footer();
         var email = document.getElementById('email').value;
         var language = document.getElementById('language').value;
 
+        const possibleLanguages = ['fr', 'en'];
+	
+        if (!possibleLanguages.includes(language)) {
+            console.error('Invalid Language');
+            return;
+        }
+
         // Construir a URL com os parâmetros preenchidos
         var donorboxURL = "https://donorbox.org/embed/donor-test-3?";
         donorboxURL += "first_name=" + encodeURIComponent(firstName);
