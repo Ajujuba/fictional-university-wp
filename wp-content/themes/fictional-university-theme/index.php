@@ -9,15 +9,17 @@ pageBanner([
 <div class="container container--narrow page-section">
     <!-- Filtros -->
     <div class="filters">
-        <form id="post-filter" action="" method="get">
-            <label for="post-name">Filter by Post Name:</label>
-            <input type="text" id="post-name" name="post_name" placeholder="Enter post name">
-            
-            <label for="post-date">Filter by Post Date:</label>
-            <input type="text" id="post-date" name="post_date" placeholder="Select date range">
-            
-            <input type="submit" value="Apply Filters">
-            <input type="button" id="clear-filters" value="Clear Filters">
+        <form id="post-filter" action="" method="get" class="form-filter-post">
+            <div>
+                <label for="post-name">Filter by Post Name:</label>
+                <input type="text" id="post-name" name="post_name" placeholder="Enter post name">
+            </div>
+            <div>
+                <label for="post-date">Filter by Post Date:</label>
+                <input type="text" id="post-date" name="post_date" placeholder="Select date range">
+            </div>
+            <input type="submit" value="Apply Filters" class="btn btn--small btn--blue">
+            <input type="button" id="clear-filters" value="Clear Filters" class="btn btn--small btn--dark-orange">
 
         </form>
     </div>

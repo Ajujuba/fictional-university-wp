@@ -1610,6 +1610,16 @@ body.admin-bar .search-overlay {
   margin-bottom: 0;
 }
 
+.form-filter-post {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1.1rem;
+  padding-bottom: 20px;
+  align-items: center;
+  border-bottom: 1px solid #DEDEDE;
+  margin-bottom: 20px;
+}
+
 .content-homepage {
   display: flex;
   justify-content: center;
