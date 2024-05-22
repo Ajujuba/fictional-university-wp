@@ -227,6 +227,19 @@ function enqueue_custom_script_events() {
         // Finds the script and sends the data
         wp_localize_script('custom-script', 'customScriptData', $script_data);
     }
+
+    if(is_front_page() || is_home()){
+        wp_enqueue_script('custom-home-blog-page', get_template_directory_uri() . '/assets/js/custom-home-blog-page.js', array(), null, true);
+
+        // Define the data you want to send to your JS script
+        $script_data = array(
+            'admin_ajax_url' => esc_url(admin_url('admin-ajax.php')),
+            'theme_path' => get_template_directory_uri(),
+        );
+
+        // Finds the script and sends the data
+        wp_localize_script('custom-home-blog-page', 'customScriptData', $script_data);
+    }
 }
 add_action('wp_enqueue_scripts', 'enqueue_custom_script_events');
 
