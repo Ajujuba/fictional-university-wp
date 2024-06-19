@@ -43,55 +43,6 @@ pageBanner([
     </div>
 </div>
 
-<script>
-
-jQuery(document).ready(function() {
-    // Load datepicker with range dates
-    jQuery('#post-date').daterangepicker({
-        opens: 'left'
-    }, function(start, end, label) {
-        console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
-    });
-});
-
-jQuery(document).ready(function($) {
-
-    $('#clear-filters').click(function() {
-        $('#post-name').val('');
-        $('#post-date').val('');
-
-        window.location.reload();
-    });
-
-    $('#post-filter').submit(function(event) {
-        event.preventDefault();
-        
-        var postName = $('#post-name').val();
-        var postDate = $('#post-date').val();
-        console.log(postDate)
-        // Enviar solicitação AJAX para buscar os posts filtrados
-        $.ajax({
-            url: '<?php echo admin_url('admin-ajax.php'); ?>',
-            type: 'GET',
-            data: {
-                action: 'filter_posts',
-                post_name: postName,
-                post_date: postDate
-            },
-            success: function(response) {
-                $('.resultsSearchBlog').empty();
-                //console.log(response);
-                $('.resultsSearchBlog').html(response);
-            },
-            error: function(xhr, status, error) {
-                console.log(xhr.responseText);
-            }
-        });
-    });
-});
-
-</script>
-
 <?php
 get_footer();
 ?>
