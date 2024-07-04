@@ -1,14 +1,14 @@
 <div class="event-summary">
     <a class="event-summary__date t-center" href="<?php the_permalink() ?>">
         <span class="event-summary__month">
-            <?php 
+            <?php
                 //the_field('event_date') 
                 $eventDate = new DateTime(get_field('event_date'));
                 echo $eventDate->format('M');
             ?>
         </span>
         <span class="event-summary__day">
-            <?php 
+            <?php
                 //the_field('event_date') 
                 $eventDate = new DateTime(get_field('event_date'));
                 echo $eventDate->format('d');
@@ -24,7 +24,7 @@
                 }else{
                     echo wp_trim_words(get_the_content(), 18);
                 }
-            ?>     
+            ?>
             <a href="<?php the_permalink() ?>" class="nu gray">Learn more</a>
         </p>
     </div>

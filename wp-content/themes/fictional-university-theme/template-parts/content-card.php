@@ -152,7 +152,7 @@
                 <span><?= get_field('localization_competitions') ?></span>
                         &bull;
                 <span> <?= $day_event ?> </span>
-            </h5> 
+            </h5>
             <p class="card-text"><?php the_title() ?></p>
         </div>
     </div>
@@ -286,5 +286,5 @@
     </form>
 </div>
 <hr>
-<div id="events-results"></div> 
+<div id="events-results"></div>
 -->

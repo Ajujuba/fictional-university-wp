@@ -17,7 +17,7 @@ get_header();
         <div class="full-width-split__inner">
             <h2 class="headline headline--small-plus t-center">Upcoming Events</h2>
 
-            <?php 
+            <?php
                 $today = date('Ymd');
                 $homePageEvents = new WP_Query([
                     'posts_per_page' => 2,
@@ -40,12 +40,12 @@ get_header();
                     // 'order' => 'ASC'
 
                 ]);
-
-                    while($homePageEvents->have_posts()){
-                        $homePageEvents->the_post(); 
-                        get_template_part('template-parts/content', 'event');
-                    } 
-                    wp_reset_postdata();
+                //var_dump($homePageEvents);
+                while($homePageEvents->have_posts()){
+                    $homePageEvents->the_post();
+                    get_template_part('template-parts/content', 'event');
+                } 
+                wp_reset_postdata();
             ?>
 
             <p class="t-center no-margin"><a href="<?= get_post_type_archive_link('event') ?>" class="btn btn--blue">View All Events</a></p>
@@ -55,7 +55,7 @@ get_header();
         <div class="full-width-split__inner">
             <h2 class="headline headline--small-plus t-center">From Our Blogs</h2>
 
-            <?php 
+            <?php
 
             $homePagePosts = new WP_Query([
                 'posts_per_page' => 2,
@@ -77,7 +77,7 @@ get_header();
                                     }else{
                                         echo wp_trim_words(get_the_content(), 18);
                                     }
-                                ?> 
+                                ?>
                                 <a href="<?php the_permalink() ?>" class="nu gray">Read more</a>
                             </p>
                         </div>
@@ -97,7 +97,7 @@ get_header();
                 $homepageSlideshow = new WP_Query(array(
                 'posts_per_page' => 10,
                 'post_type' => 'slide'
-                )); 
+                ));
                 
                 while($homepageSlideshow->have_posts()){
                     $homepageSlideshow->the_post(); ?>
@@ -107,7 +107,9 @@ get_header();
                             <div class="hero-slider__overlay">
                                 <h2 class="headline headline--medium t-center"><?php the_title()?></h2>
                                 <p class="t-center"><?php echo wp_trim_words(get_the_content(), 10, '...')?></p>
-                                <p class="t-center no-margin"><a href="<?php the_permalink()?>" class="btn btn--blue"><?= get_field('button_title_slide') ?></a></p>
+                                <p class="t-center no-margin">
+                                    <a href="<?php the_permalink()?>" class="btn btn--blue"><?= get_field('button_title_slide') ?></a>
+                                </p>
                             </div>
                         </div>
                     </div>

@@ -2,8 +2,8 @@
     get_header(); 
 
     while(have_posts()){
-        the_post(); 
-        pageBanner([   
+        the_post();
+        pageBanner([
         ]);
         ?>
 
@@ -15,7 +15,7 @@
                 <?php the_content(); ?>
             </div>
 
-            <?php 
+            <?php
                 $relatedPrograms = get_field('related_programs'); // retorna um bjeto do wordpress por isso posso usar dentro da get_the_title()
 
                 if($relatedPrograms){

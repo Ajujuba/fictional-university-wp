@@ -311,7 +311,7 @@ function custom_event_filter_shortcode() {
 
     if ($location_filter !== 'all') {
         $args['meta_query'][] = array(
-            'key' => 'localization_competitions', 
+            'key' => 'localization_competitions',
             'value' => $location_filter,
             'compare' => '=',
         );
@@ -320,7 +320,7 @@ function custom_event_filter_shortcode() {
 	if ($month_filter !== 'all') {
 		$args['meta_query'][] = array(
 			'key' => 'month_hidden',
-			'value' => $month_filter, 
+			'value' => $month_filter,
 			'compare' => '=',
 		);
 

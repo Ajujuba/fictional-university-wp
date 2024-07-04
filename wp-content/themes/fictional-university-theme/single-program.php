@@ -1,5 +1,5 @@
-<?php 
-    get_header(); 
+<?php
+    get_header();
 
     while(have_posts()){
         the_post();
@@ -87,9 +87,9 @@
                     echo '<hr class="section-break">';
                     echo '<h2 class="headline headline--medium">Upcoming ' . get_the_title(). ' Events</h2>';
                     while($homePageEvents->have_posts()){
-                        $homePageEvents->the_post(); 
+                        $homePageEvents->the_post();
                         get_template_part('template-parts/content-event');
-                    } 
+                    }
                     wp_reset_postdata();
                 }
 

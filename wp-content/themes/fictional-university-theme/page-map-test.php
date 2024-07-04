@@ -33,6 +33,6 @@
         <ul id="map-list" class="map-list scrollbar-hide"></ul>
     </div>
 
-<?php 
+<?php
     get_footer();
 ?>

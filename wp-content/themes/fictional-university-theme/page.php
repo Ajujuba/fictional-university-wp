@@ -3,12 +3,12 @@
 get_header();
 
 while (have_posts()) {
-    the_post(); 
+    the_post();
     pageBanner(); ?>
 
     <div class="container container--narrow page-section">
 
-        <?php 
+        <?php
             $theParent = wp_get_post_parent_id(get_the_ID()); //gets the parent page ID of the current page. get_the_ID() gets the ID of the current page and sends that ID to wp_get_post_parent_id() to get the ID of the parent page.
             if($theParent):
         ?>
@@ -17,7 +17,7 @@ while (have_posts()) {
             </div>
         <?php endif ?>
             
-        <?php 
+        <?php
             // se a página atual tiver filhos, a função retorna a coleção de todas as paginas filhas 
             $testArray= get_pages([
                 'child_of' => get_the_ID()

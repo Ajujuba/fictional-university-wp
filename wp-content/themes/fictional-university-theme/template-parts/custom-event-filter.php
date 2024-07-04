@@ -145,4 +145,4 @@
     </form>
 </div>
 <hr>
-<div id="events-results"></div> 
+<div id="events-results"></div>

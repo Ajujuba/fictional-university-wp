@@ -1,5 +1,5 @@
-<?php 
-    get_header(); 
+<?php
+    get_header();
 
     while(have_posts()){
         the_post();
@@ -13,7 +13,7 @@
                 <?php the_content(); the_field('map_location') ?>
             </div>
 
-            <?php 
+            <?php
                 #search Programs
                 $relatedPrograms = new WP_Query([
                     'posts_per_page' => -1,
@@ -43,7 +43,7 @@
                                 <?php the_title() ?>
                             </a>
                         </li>
-                    <?php } 
+                    <?php }
                     echo '</ul>';
                     wp_reset_postdata();
                 }

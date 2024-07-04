@@ -37,7 +37,7 @@
                                         [
                                             'key' => 'liked_professor_id',
                                             'compare' => '=' ,
-                                            'value' => get_the_ID() 
+                                            'value' => get_the_ID()
                                         ]
                                     ]
                                 ]);
@@ -51,14 +51,14 @@
                             <i class="fa fa-heart-o" aria-hidden="true"></i>
                             <i class="fa fa-heart" aria-hidden="true"></i>
                             <!-- found_post already counts the results of 'like' posts it found, and ignores pagination, so even if we have pagination it will count the total result -->
-                            <sapn class="like-count"><?= $likedCount->found_posts?></span> 
+                            <sapn class="like-count"><?= $likedCount->found_posts?></span>
                         </span>
                         <?php  the_content(); ?>
                     </div>
                 </div>
             </div>
 
-            <?php 
+            <?php
                 $relatedPrograms = get_field('related_programs'); // retorna um bjeto do wordpress por isso posso usar dentro da get_the_title()
 
                 if($relatedPrograms){
