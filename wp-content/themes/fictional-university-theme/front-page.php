@@ -198,38 +198,34 @@ $page2 = get_page_by_path('content-2');
     </div>
 </div>
 
-<div class="test-donation" style="display: flex;justify-content: space-around;margin: 30px 0px;">
-    <div class="left-colum">
-        <script src="https://donorbox.org/widget.js" paypalExpress="false"></script><iframe src="https://donorbox.org/embed/donor-test-3" name="donorbox" allowpaymentrequest="allowpaymentrequest" seamless="seamless" frameborder="0" scrolling="no" height="900px" width="100%" style="max-width: 500px; min-width: 350px; max-height:none!important"></iframe>
-    </div>
+<h2 class="headline headline--medium t-center title-donation">Make a donation to our university</h2>
 
-    <style>
-        form#FormDonate {
-            background-color: aliceblue;
-            width: 300px;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-        }
-        form#FormDonate input{
-            padding: 10px;
-            margin: 10px 0px;
-        }
-    </style>
-    <div class="right-colum">
+<div class="test-donation">
+    <!-- <div class="left-colum">
+        <script src="https://donorbox.org/widget.js" paypalExpress="false"></script><iframe src="https://donorbox.org/embed/donor-test-3" name="donorbox" allowpaymentrequest="allowpaymentrequest" seamless="seamless" frameborder="0" scrolling="no" height="900px" width="100%" style="max-width: 500px; min-width: 350px; max-height:none!important"></iframe>
+    </div> -->
+
+    <div class="row-form-donor">
         <form id="FormDonate">
+            <h3 class="headline headline--small" style="margin-bottom:0px">Select an amount to donate:</h3>
             <div class="row-radio">
-                <input type="radio" name="radioAmount" value="5">R$5
-                <input type="radio" name="radioAmount" value="10">R$10
-                <input type="radio" name="radioAmount" value="20">R$20
+                <span class="number" style="font-size:19px;background:transparent;">
+                    <input type="radio" name="radioAmount" value="5">R$5
+                </span>
+                <span class="number" style="font-size:19px;background:transparent;">
+                    <input type="radio" name="radioAmount" value="10">R$10
+                </span>
+                <span class="number" style="font-size:19px;background:transparent;">
+                    <input type="radio" name="radioAmount" value="20">R$20
+                </span>
             </div>
-            <input type="text" id="amount" name="amount" placeholder="Ex: R$200.000,00" required>
+            <input type="text" id="amount" name="amount" placeholder="Or enter another value Ex: R$20.000,00" required>
             <input type="text" id="first_name"  name="first_name" placeholder="Your name" required>
             <input type="text" id="last_name" name="last_name" placeholder="Your last name" required>
             <input type="email"  id="email" name="email" placeholder="Your email" required>
             <input type="hidden"  id="language" name="language" value="fr">
             <br>
-            <button type="button" onclick="validarFormulario()">Enviar para Donorbox</button>
+            <button type="button" class="btn btn--blue" onclick="validateFormDonorbox()">Send to Donorbox</button>
         </form>
     </div>
 </div>

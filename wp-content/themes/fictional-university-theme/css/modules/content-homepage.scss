@@ -74,6 +74,39 @@
     transform: none;
 }
 
+form#FormDonate {
+    background-color: aliceblue;
+    width: 300px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+form#FormDonate input{
+    padding: 10px;
+    margin: 10px 0px;
+}
+
+form#FormDonate .row-radio {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+form#FormDonate input[type="radio"] {
+    margin-right: 10px;
+}
+
+.title-donation{
+    margin: 40px;
+}
+
+.row-form-donor{
+    display: flex;
+    justify-content: center;
+    margin: 30px;
+}
+
 @include CardsMedium{
     .content-homepage{
         margin: 0px;

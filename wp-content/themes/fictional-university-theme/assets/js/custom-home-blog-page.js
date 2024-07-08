@@ -47,7 +47,7 @@ jQuery(document).ready(function($) {
 });
 
 //FRONT-PAGE
-function validarFormulario() {
+function validateFormDonorbox() {
     var firstName = document.getElementById('first_name').value;
     var lastName = document.getElementById('last_name').value;
     var email = document.getElementById('email').value;
