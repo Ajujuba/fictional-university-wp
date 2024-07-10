@@ -76,6 +76,7 @@
 .btn--yellow {
   background-color: #F4D35E;
   text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.22);
+  text-align: center;
 }
 
 .form-control{
@@ -90,4 +91,10 @@
   border-radius: 0.25rem;
   transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 
+}
+
+@media screen and (max-width: 995px) {
+  .row{
+    flex-direction: column;
+  }
 }

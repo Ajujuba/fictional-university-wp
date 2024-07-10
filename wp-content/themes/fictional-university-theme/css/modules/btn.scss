@@ -11,18 +11,21 @@
   outline: none;
 
   &--small {
-    font-size: 0.88rem;
-    padding: 7px 13px;
+    font-size: 0.88rem !important;
+    padding: 7px 13px !important;
     font-weight: 300;
+    margin-top: 0px;
+    margin-bottom: 0px;
   }
 
   &--with-photo {
-    padding-left: 40px;
+    padding-left: 40px !important;
     position: relative;
   }
 
   &--orange {
-    background-color: $lightOrange;
+    background-color: $lightOrange !important;
+    color: white !important;
   }
 
   &--orange:hover {
@@ -30,7 +33,8 @@
   }
 
   &--dark-orange {
-    background-color: $darkOrange;
+    background-color: $darkOrange !important;
+    color: white !important;
   }
 
   &--dark-orange:hover {

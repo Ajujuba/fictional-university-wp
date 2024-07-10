@@ -1,7 +1,7 @@
 <?php
 require_once plugin_dir_path(__FILE__) . 'GetPets.php';
 $getPets = new GetPets();
-get_header(); 
+get_header();
 ?>
 
 <div class="page-banner">
@@ -11,25 +11,31 @@ get_header();
     <div class="page-banner__intro">
       <p>Providing forever homes one search at a time.</p>
     </div>
-  </div>  
+  </div>
 </div>
 
 <div class="container container--narrow page-section">
   <h3 class="headline headline--small">Filter Your Results:</h3>
   <form>
-    <div class="row">
-      <input type="text" class="form-control" name="species" placeholder="Specie" value="<?= isset($_GET['species']) && !empty($_GET['species']) ? esc_attr($_GET['species']) : ''?>">
-      <input type="number" class="form-control" name="minweight" placeholder="Min Weight" value="<?= isset($_GET['minweight']) && !empty($_GET['minweight']) ? esc_attr($_GET['minweight']) : ''?>">
-      <input type="number" class="form-control" name="maxweight" placeholder="Max Weight" value="<?= isset($_GET['maxweight']) && !empty($_GET['maxweight']) ? esc_attr($_GET['maxweight']) : ''?>">
-      <input type="number" class="form-control" name="minyear" placeholder="Min Birth Year" value="<?= isset($_GET['minyear']) && !empty($_GET['minyear']) ? esc_attr($_GET['minyear']) : ''?>">
-      <input class="btn btn--blue" type="submit" value="Filter">
+    <div class="col">
+      <div class="row">
+        <input type="text" class="form-control" name="species" placeholder="Specie" value="<?= isset($_GET['species']) && !empty($_GET['species']) ? esc_attr($_GET['species']) : ''?>">
+        <input type="number" class="form-control" name="minweight" placeholder="Min Weight" value="<?= isset($_GET['minweight']) && !empty($_GET['minweight']) ? esc_attr($_GET['minweight']) : ''?>">
+        <input type="number" class="form-control" name="maxweight" placeholder="Max Weight" value="<?= isset($_GET['maxweight']) && !empty($_GET['maxweight']) ? esc_attr($_GET['maxweight']) : ''?>">
+        <input type="number" class="form-control" name="minyear" placeholder="Min Birth Year" value="<?= isset($_GET['minyear']) && !empty($_GET['minyear']) ? esc_attr($_GET['minyear']) : ''?>">
+      </div>
+      <div class="row">
+        <input type="number" class="form-control" name="maxyear" placeholder="Max Birth Year" value="<?= isset($_GET['maxyear']) && !empty($_GET['maxyear']) ? esc_attr($_GET['maxyear']) : ''?>">
+        <input type="text" class="form-control" name="favhobby" placeholder="Favorite Hobby" value="<?= isset($_GET['favhobby']) && !empty($_GET['favhobby']) ? esc_attr($_GET['favhobby']) : ''?>">
+        <input type="text" class="form-control" name="favcolor" placeholder="Favorite Color" value="<?= isset($_GET['favcolor']) && !empty($_GET['favcolor']) ? esc_attr($_GET['favcolor']) : ''?>">
+        <input type="text" class="form-control" name="favfood" placeholder="Favorite Food" value="<?= isset($_GET['favfood']) && !empty($_GET['favfood']) ? esc_attr($_GET['favfood']) : ''?>">
+      </div>
     </div>
-    <div class="row">
-      <input type="number" class="form-control" name="maxyear" placeholder="Max Birth Year" value="<?= isset($_GET['maxyear']) && !empty($_GET['maxyear']) ? esc_attr($_GET['maxyear']) : ''?>">
-      <input type="text" class="form-control" name="favhobby" placeholder="Favorite Hobby" value="<?= isset($_GET['favhobby']) && !empty($_GET['favhobby']) ? esc_attr($_GET['favhobby']) : ''?>">
-      <input type="text" class="form-control" name="favcolor" placeholder="Favorite Color" value="<?= isset($_GET['favcolor']) && !empty($_GET['favcolor']) ? esc_attr($_GET['favcolor']) : ''?>">
-      <input type="text" class="form-control" name="favfood" placeholder="Favorite Food" value="<?= isset($_GET['favfood']) && !empty($_GET['favfood']) ? esc_attr($_GET['favfood']) : ''?>">
-      <a class="btn btn--yellow" href="<?= esc_url(remove_query_arg(array_keys($_GET))) ?>">Reset</a>
+    <div class="col">
+      <div class="row">
+        <input class="btn btn--blue" type="submit" value="Filter">
+        <a class="btn btn--yellow" href="<?= esc_url(remove_query_arg(array_keys($_GET))) ?>">Reset</a>
+      </div>
     </div>
   </form>
 
@@ -67,7 +73,7 @@ get_header();
     <?php endforeach ?>
   </table>
   
-  <?php 
+  <?php
     if(current_user_can('administrator')): //check if my user is admin to show the add animal form
     #Basically here, when we send it to 'admin-post.php', WP looks for a field with name='action' and uses the value of that field to create a hook, so we can use the hook using 'admin_post_{valueOfYourActionField}'
   ?>
