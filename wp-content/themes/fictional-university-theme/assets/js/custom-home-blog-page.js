@@ -25,7 +25,7 @@ jQuery(document).ready(function($) {
         var postName = $('#post-name').val();
         var postDate = $('#post-date').val();
         console.log(postDate)
-        // Enviar solicitação AJAX para buscar os posts filtrados
+        // Send AJAX request to fetch filtered posts
         $.ajax({
             url: customScriptData.admin_ajax_url ,
             type: 'GET',
@@ -54,12 +54,12 @@ function validateFormDonorbox() {
     var amount = document.getElementById('amount').value;
 
     var radioValue = document.querySelector('input[name="radioAmount"]:checked');
-    // Verificar se o usuário escolheu uma opção de radio OU inseriu um valor no campo de texto
+    // Check if the user chose a radio option OR entered a value in the text field
     if (!radioValue && amount.trim() === '') {
         alert('Por favor, escolha uma opção de doação ou insira um valor.');
         return false;
     }
-    // Se o usuário escolheu uma opção de radio, usar o valor do radio, senão, usar o valor do campo de texto
+    // If the user chose a radio option, use the radio value, otherwise, use the text field value
     var selectedAmount = radioValue ? radioValue.value : amount;
     
     if (firstName.trim() === '' || lastName.trim() === '' || email.trim() === '') {
@@ -77,7 +77,7 @@ function validateFormDonorbox() {
 }
 
 function enviarParaDonorbox(amount) {
-    // Obter os valores dos campos do formulário
+    // Get the values ​​of the form fields
     var firstName = document.getElementById('first_name').value;
     var lastName = document.getElementById('last_name').value;
     var email = document.getElementById('email').value;
@@ -90,7 +90,7 @@ function enviarParaDonorbox(amount) {
         return;
     }
 
-    // Construir a URL com os parâmetros preenchidos
+    // Build the URL with the parameters filled in
     var donorboxURL = "https://donorbox.org/embed/donor-test-3?";
     donorboxURL += "first_name=" + encodeURIComponent(firstName);
     donorboxURL += "&last_name=" + encodeURIComponent(lastName);
@@ -98,6 +98,6 @@ function enviarParaDonorbox(amount) {
     donorboxURL += "&amount=" + encodeURIComponent(amount);
     donorboxURL += "&language=" + encodeURIComponent(language);
 
-    // Redirecionar para a URL da Donorbox
+    // Redirect to Donorbox URL
     window.location.href = donorboxURL;
 }
