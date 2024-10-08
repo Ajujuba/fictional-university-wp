@@ -36,7 +36,6 @@ jQuery(document).ready(function($) {
             },
             success: function(response) {
                 $('.resultsSearchBlog').empty();
-                //console.log(response);
                 $('.resultsSearchBlog').html(response);
             },
             error: function(xhr, status, error) {
@@ -56,20 +55,20 @@ function validateFormDonorbox() {
     var radioValue = document.querySelector('input[name="radioAmount"]:checked');
     // Check if the user chose a radio option OR entered a value in the text field
     if (!radioValue && amount.trim() === '') {
-        alert('Por favor, escolha uma opção de doação ou insira um valor.');
+        alert('Please choose a donation option or enter an amount.');
         return false;
     }
     // If the user chose a radio option, use the radio value, otherwise, use the text field value
     var selectedAmount = radioValue ? radioValue.value : amount;
     
     if (firstName.trim() === '' || lastName.trim() === '' || email.trim() === '') {
-        alert('Por favor, preencha todos os campos.');
+        alert('Please fill in all fields.');
         return false;
     }
 
     var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-        alert('Por favor, insira um endereço de e-mail válido.');
+        alert('Please enter a valid email address.');
         return false;
     }
 
