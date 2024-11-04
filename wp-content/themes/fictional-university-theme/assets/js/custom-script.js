@@ -170,23 +170,27 @@ document.addEventListener('DOMContentLoaded', function() {
             }
     
             load() {
+                // Add a tile layer to the map using OpenStreetMap tiles and provide attribution
                 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
                 }).addTo(this.map);
     
-                const mapList = document.querySelector('#map-list');
+                const mapList = document.querySelector('#map-list'); // Get the HTML element with the ID 'map-list' to list map items
                 const markerCoordinates = [];
-                const markers = L.markerClusterGroup();
+                const markers = L.markerClusterGroup(); // Initialize a marker cluster group to manage multiple markers efficiently
                 
                 locations.forEach((location) => {
                     const { lat, lon, title, id, link } = location;
 
-                    const marker = L.marker([lat, lon], { id: id }).bindPopup(title);
+                    const marker = L.marker([lat, lon], { id: id }).bindPopup(title); // Create a map marker at the location's latitude and longitude, bind a popup with the title
+                    
+                    // Create a list item (card) for the location and append it to 'mapList'
                     const listItem = this.createCard(id, lat, lon, title, link, this.clickPinToMarkCard);
                     mapList.appendChild(listItem);
 
                     const cardContainer = document.querySelector('.card-container');
             
+                    // Add an event listener to highlight the card when the marker is clicked
                     marker.on('click', () => {
                         if (cardContainer) {
                             cardContainer.classList.add('highlighted');
@@ -204,18 +208,21 @@ document.addEventListener('DOMContentLoaded', function() {
                                 });
                             }
                         }
+                        // Center the map on the clicked marker and set the zoom level to 13
                         this.map.setView([lat, lon], 13);
                     });
         
-                    markerCoordinates.push([lat, lon]);
-                    markers.addLayer(marker);
+                    markerCoordinates.push([lat, lon]); // Add the marker coordinates to the array
+                    markers.addLayer(marker); // Add the marker to the marker cluster group
                 });
     
-                this.map.addLayer(markers);
+                this.map.addLayer(markers); // Add the marker cluster group to the map
             }
     
             updateVisibleMarkers() {
-                const mapBounds = this.map.getBounds();
+                const mapBounds = this.map.getBounds();  // Get the current bounds (visible area) of the map
+
+                // Filter locations to find only those within the visible map bounds
                 const visibleLocations = locations.filter(location =>
                     mapBounds.contains(L.latLng(location.lat, location.lon))
                 );
@@ -223,6 +230,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const mapList = document.querySelector('#map-list');
                 mapList.innerHTML = '';
     
+                // If no locations are visible within the current map view
                 if (visibleLocations.length === 0) {
                     const listItem = document.createElement('li');
                     listItem.classList.add('map-list-item');
@@ -235,7 +243,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     mapList.appendChild(listItem);
                     return;
                 }
-    
+                
+                // For each location visible within the map bounds
                 visibleLocations.forEach(location => {
                     const { lat, lon, title, id, link } = location;
                     const listItem = this.createCard(id, lat, lon, title, link, this.clickPinToMarkCard);
@@ -244,34 +253,39 @@ document.addEventListener('DOMContentLoaded', function() {
             }
     
             createCard(id, lat, lon, title, link, clickPinToMarkCard) {
+                // Create a container for the card
                 const cardContainer = document.createElement('div');
                 cardContainer.classList.add('card-container');
     
+                // Create a list item for the map list entry
                 const listItem = document.createElement('li');
                 listItem.classList.add('map-list-item');
     
                 listItem.addEventListener('click', (e) => {
-                this.dataMarkerId = listItem.dataset.markerId;
-    
-                const marker = this.findMarkerById(id);
-                if (this.dataMarkerId == id) {
-                    listItem.classList.add('highlighted');
-                }
-    
-                if (marker) {
-                    this.map.setView([lat, lon], 13);
-                }
-    
-                e.stopPropagation();
+                    this.dataMarkerId = listItem.dataset.markerId; // Set the marker ID to the list item ID for tracking
+        
+                    const marker = this.findMarkerById(id);
+
+                    // If the clicked item matches the marker ID, highlight the item
+                    if (this.dataMarkerId == id) {
+                        listItem.classList.add('highlighted');
+                    }
+        
+                    if (marker) {
+                        this.map.setView([lat, lon], 13);
+                    }
+        
+                    e.stopPropagation();
                 });
     
+                // Check if the card should be highlighted, based on the provided ID or the stored marker ID
                 if (clickPinToMarkCard == id || this.dataMarkerId == id) {
                     listItem.classList.add('highlighted');
                     this.clickPinToMarkCard = 0;
                     this.dataMarkerId = null;
                 }
     
-                listItem.dataset.markerId = id;
+                listItem.dataset.markerId = id; // Assign the ID to the list item for tracking
     
                 const html = `
                     <div class="card-map">
