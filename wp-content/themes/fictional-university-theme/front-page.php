@@ -22,11 +22,11 @@ get_header();
                 $homePageEvents = new WP_Query([
                     'posts_per_page' => 2,
                     'post_type' => 'event',
-                    #as 3 linhas a seguir garantem que exibo os eventos com a 'menor' data, mais proxima
+                    #the following 3 lines ensure that I display the events with the 'smallest' date (closest)
                     'meta_key' => 'event_date',
                     'orderby' => 'meta_value_num',
                     'order' => 'ASC',
-                    #As linhas a seguir garantem que nao pegarei eventos que já passaram
+                    #The following lines ensure that I do not catch events that have already passed.
                     'meta_query' => [
                         [
                             'key' => 'event_date',
@@ -35,7 +35,7 @@ get_header();
                             'type' => 'numeric'
                         ]
                     ]
-                    #Se quisesse ordenar por ordem alfabetica:
+                    #If you wanted to sort alphabetically:
                     // 'orderby' => 'title',
                     // 'order' => 'ASC'
 
